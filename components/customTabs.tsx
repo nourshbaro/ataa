@@ -1,3 +1,4 @@
+import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
 import { spacingX } from '@/types/theme';
 import { verticalScale } from '@/utils/styling';
@@ -13,6 +14,7 @@ type ValidIconName = 'home-outline' | 'football-outline' | 'basket-outline' | 'c
 
 const CustomTabs: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
     const { theme } = useTheme();
+    const { language, isRTL, t } = useLanguage();
 
     const iconContainerBase: ViewStyle = {
         width: verticalScale(80),
@@ -41,8 +43,8 @@ const CustomTabs: React.FC<BottomTabBarProps> = ({ state, descriptors, navigatio
                     name={name as ValidIconName}
                     size={verticalScale(22)}
                     color={theme.colors.white}
+                    style={isRTL ? { transform: [{ scaleX: -1 }] } : undefined}
                 />
-
             </View>
             <Typo size={12} color={theme.colors.white}>
                 {label}
@@ -51,15 +53,24 @@ const CustomTabs: React.FC<BottomTabBarProps> = ({ state, descriptors, navigatio
     );
 
     const tabbarIcons: any = {
-        index: (isFocused: boolean) => renderTabIcon('home-outline', 'Home', isFocused),
-        team: (isFocused: boolean) => renderTabIcon('football-outline', 'Team', isFocused),
-        shop: (isFocused: boolean) => renderTabIcon('basket-outline', 'Shop', isFocused),
-        games: (isFocused: boolean) => renderTabIcon('calendar-outline', 'Games', isFocused),
+        index: (isFocused: boolean) => renderTabIcon('home-outline', t('home'), isFocused),
+        categories: (isFocused: boolean) => renderTabIcon('hand-left-outline', t('categories'), isFocused),
+        campaigns: (isFocused: boolean) => renderTabIcon('gift-outline', t('campaigns'), isFocused),
+        settings: (isFocused: boolean) => renderTabIcon('settings-outline', t('settings'), isFocused),
         // contribute: (isFocused: boolean) => renderTabIcon('heart-outline', 'Contribute', isFocused),
     };
 
     return (
-        <View style={[styles.tabbar, { backgroundColor: theme.colors.primary, borderTopColor: theme.colors.white }]}>
+        <View
+            style={[
+                styles.tabbar,
+                {
+                    backgroundColor: theme.colors.primary,
+                    borderTopColor: theme.colors.white,
+                    flexDirection: isRTL ? 'row-reverse' : 'row',
+                },
+            ]}
+        >
             {state.routes.map((route, index) => {
                 const { options } = descriptors[route.key];
                 const label: any =

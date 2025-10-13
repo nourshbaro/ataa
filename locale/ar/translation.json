@@ -1,6 +1,9 @@
 {
+    "welcome": "مرحباً",
+    "changeLanguage": "تغيير اللغة",
     "home": "الرئيسية",
-    "camp": "البرامج",
+    "campaigns": "البرامج",
+    "categories": "فئات",
     "mainDonation": "تبرع",
     "search": "البحث",
     "settings": "الاعدادات",

@@ -11,9 +11,9 @@ const _layout = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.primary }}>
       <Tabs tabBar={(props) => <CustomTabs {...props} />} screenOptions={{ headerShown: false }}>
         <Tabs.Screen name="index" />
-        {/* <Tabs.Screen name="team" /> */}
-        {/* <Tabs.Screen name="shop" /> */}
-        {/* <Tabs.Screen name="games" /> */}
+        <Tabs.Screen name="categories" />
+        <Tabs.Screen name="campaigns" />
+        <Tabs.Screen name="settings" />
         {/* <Tabs.Screen name="contribute" /> */}
       </Tabs>
     </SafeAreaView>

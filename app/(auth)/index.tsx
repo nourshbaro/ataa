@@ -11,14 +11,14 @@ const index = () => {
   const { toggleTheme, mode } = useTheme()
   return (
     <ScreenWrapper>
-      <Text>{t('welcome')}</Text>
-      <Text>{t('home')}</Text>
+      <Typo>{t('welcome')}</Typo>
+      <Typo>{t('home')}</Typo>
       <Button onPress={toggleTheme}>
         <Typo>
           {t('changeLanguage')}
         </Typo>
       </Button>
-      <Text>Current: {mode}</Text>
+      <Typo>Current: {mode}</Typo>
     </ScreenWrapper>
   )
 }

@@ -10,8 +10,7 @@ const { height } = Dimensions.get('window');
 const ScreenWrapper = ({ style, children }: ScreenWrapperProps) => {
   const paddingTop = Platform.OS === 'ios' ? height * 0.01 : height * 0.02;
   const { theme } = useTheme();
-  const { language } = useLanguage();
-  const isRTL = language === 'ar' ? true : false;
+  const { language, isRTL } = useLanguage();
 
   return (
     <LinearGradient

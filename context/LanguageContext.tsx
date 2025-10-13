@@ -1,11 +1,17 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+    useCallback,
+} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import en from '../locale/en/translation.json';
 import ar from '../locale/ar/translation.json';
 
 const STORAGE_KEY = 'ataa_language';
 
-type Language = 'en' | 'ar';
+export type Language = 'en' | 'ar';
 type Translations = Record<string, string>;
 
 interface LanguageContextType {
@@ -13,6 +19,7 @@ interface LanguageContextType {
     toggleLanguage: () => void;
     setLanguage: (lang: Language) => void;
     t: (key: string) => string;
+    isRTL: boolean;
 }
 
 const translations: Record<Language, Translations> = { en, ar };
@@ -40,7 +47,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }, []);
 
     const toggleLanguage = async () => {
-        const newLang = language === 'en' ? 'ar' : 'en';
+        const newLang: Language = language === 'en' ? 'ar' : 'en';
         try {
             await AsyncStorage.setItem(STORAGE_KEY, newLang);
             setLanguageState(newLang);
@@ -58,23 +65,35 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         }
     };
 
-    const t = (key: string): string => {
-        return translations[language][key] || key;
-    };
+    const t = useCallback((key: string): string => {
+        const value = translations[language][key];
+        if (!value) {
+            console.warn(`Missing translation for key: "${key}" in language: "${language}"`);
+        }
+        return value || key;
+    }, [language]);
+
+    const isRTL = language === 'ar';
 
     if (!isLoaded) return null;
 
     return (
-        <LanguageContext.Provider value={{ language, toggleLanguage, setLanguage, t }}>
+        <LanguageContext.Provider value={{ language, toggleLanguage, setLanguage, t, isRTL }}>
             {children}
         </LanguageContext.Provider>
     );
 };
 
-export const useLanguage = () => {
+export const useLanguage = (): LanguageContextType => {
     const context = useContext(LanguageContext);
     if (!context) {
         throw new Error('useLanguage must be used within a LanguageProvider');
     }
     return context;
+};
+
+// Optional alias for cleaner usage
+export const useTranslation = () => {
+    const { t } = useLanguage();
+    return t;
 };

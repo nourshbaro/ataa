@@ -1,6 +1,9 @@
 {
+    "welcome": "Welcome",
+    "changeLanguage": "Change Language",
     "home": "Home",
-    "camp": "Campaigns",
+    "campaigns": "Campaigns",
+    "categories": "Categories",
     "mainDonation": "Donate",
     "search": "Search",
     "settings": "Settings",

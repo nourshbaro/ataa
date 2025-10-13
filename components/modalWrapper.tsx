@@ -16,8 +16,7 @@ const ModalWrapper = ({
 
   const { theme } = useTheme();
   const finalColor = bg || theme.colors.black;
-  const { language } = useLanguage();
-  const isRTL = language === 'ar' ? true : false;
+  const { language, isRTL } = useLanguage();
 
   return (
     <LinearGradient

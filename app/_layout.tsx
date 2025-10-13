@@ -22,7 +22,7 @@ function RootLayoutInner() {
     return <CustomSplashScreen onFinish={handleSplashScreenFinish} />;
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return <Stack screenOptions={{ headerShown: false }} initialRouteName={'(tabs)'} />;
 }
 
 export default function RootLayout() {
