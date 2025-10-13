@@ -7,10 +7,8 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { Platform, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Typo from './Typo';
-// import * as Icons from 'phosphor-react-native'
 
 type ValidIconName = 'home-outline' | 'football-outline' | 'basket-outline' | 'calendar-outline';
-//| 'heart-outline'
 
 const CustomTabs: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
     const { theme } = useTheme();
