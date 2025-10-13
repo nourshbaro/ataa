@@ -22,20 +22,12 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({ onFinish }) => 
         duration: 500,
         useNativeDriver: true,
       }).start(() => {
-        onFinish(); // remove from parent AFTER fade out
+        onFinish();
       });
     }, 3000);
 
     return () => clearTimeout(timeout);
   }, []);
-
-  // useEffect(() => {
-  //   if (!isLoggedIn) {
-  //     router.replace('/../components/slides');
-  //   } else {
-  //     router.replace('(tabs)/index');
-  //   }
-  // }, []);
 
   return (
     <ScreenWrapper>
