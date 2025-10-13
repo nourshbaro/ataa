@@ -1,16 +1,16 @@
 import Typo from '@/components/Typo';
+import { verticalScale } from '@/utils/styling';
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import ScreenWrapper from './ScreenWrapper';
 import Loading from './Loading';
-import { verticalScale } from '@/utils/styling';
+import ScreenWrapper from './ScreenWrapper';
 
 const WaitingInternet = () => {
     return (
         <ScreenWrapper>
             <View style={styles.container}>
                 <Image
-                    source={require('@/assets/images/nejmehGold.png')}
+                    source={require('@/assets/images/transparent.png')}
                     style={styles.backgroundImage}
                     resizeMode='contain'
                 />

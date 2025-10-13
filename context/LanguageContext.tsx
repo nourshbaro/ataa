@@ -1,35 +1,21 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import en from '../locale/en/translation.json';
+import ar from '../locale/ar/translation.json';
 
 const STORAGE_KEY = 'elbeiruty_language';
 
 type Language = 'en' | 'ar';
-
-interface Translations {
-    [key: string]: string;
-}
+type Translations = Record<string, string>;
 
 interface LanguageContextType {
     language: Language;
     toggleLanguage: () => void;
     setLanguage: (lang: Language) => void;
-    t: (key: string) => string; // Translation function
+    t: (key: string) => string;
 }
 
-const translations: Record<Language, Translations> = {
-    en: {
-        welcome: 'Welcome',
-        home: 'Home',
-        settings: 'Settings',
-        changeLanguage: 'Change Language',
-    },
-    ar: {
-        welcome: 'مرحباً',
-        home: 'الصفحة الرئيسية',
-        settings: 'الإعدادات',
-        changeLanguage: 'تغيير اللغة',
-    },
-};
+const translations: Record<Language, Translations> = { en, ar };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
@@ -43,8 +29,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
                 const storedLanguage = await AsyncStorage.getItem(STORAGE_KEY);
                 if (storedLanguage === 'en' || storedLanguage === 'ar') {
                     setLanguageState(storedLanguage);
-                } else {
-                    setLanguageState('en');
                 }
             } catch (error) {
                 console.error('Error loading language:', error);
@@ -52,7 +36,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
                 setIsLoaded(true);
             }
         };
-
         loadLanguage();
     }, []);
 

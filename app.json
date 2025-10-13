@@ -1,15 +1,24 @@
 {
   "expo": {
-    "name": "ataa-v2",
-    "slug": "ataa-v2",
+    "name": "ATAA",
+    "slug": "ataa",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "ataav2",
+    "scheme": "ataa",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/transparent.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "splash": {
+        "image": "./assets/images/transparent.png",
+        "backgroundColor": "#000000"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +28,15 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "splash": {
+        "mdpi": "./assets/images/transparent.png",
+        "hdpi": "./assets/images/transparent.png",
+        "xhdpi": "./assets/images/transparent.png",
+        "xxhdpi": "./assets/images/transparent.png",
+        "xxxhdpi": "./assets/images/transparent.png",
+        "backgroundColor": "#000000"
+      }
     },
     "web": {
       "output": "static",
@@ -30,7 +47,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/transparent.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",

@@ -1,10 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import { verticalScale } from '@/utils/styling';
-import { CustomButtonProps } from '@/types/types';
 import { useTheme } from '@/context/ThemeContext';
-import Loading from './Loading';
 import { radius } from '@/types/theme';
+import { CustomButtonProps } from '@/types/types';
+import { verticalScale } from '@/utils/styling';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import Loading from './Loading';
 
 const Button = ({
     style,
@@ -17,7 +17,7 @@ const Button = ({
 
     if (loading) {
         return (
-            <View style={[styles.button, style, { backgroundColor: 'transparent' }]}>
+            <View style={[styles.button, style, { backgroundColor: 'black' }]}>
                 {/** loading */}
                 <Loading style={{ flex: 1 }} />
             </View>

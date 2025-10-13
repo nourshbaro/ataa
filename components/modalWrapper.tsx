@@ -1,3 +1,4 @@
+import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
 import { spacingY } from '@/types/theme';
 import { ModalWrapperProps } from '@/types/types';
@@ -15,12 +16,14 @@ const ModalWrapper = ({
 
   const { theme } = useTheme();
   const finalColor = bg || theme.colors.black;
+  const { language } = useLanguage();
+  const isRTL = language === 'ar' ? true : false;
 
   return (
     <LinearGradient
       colors={[theme.colors.primary, theme.colors.black]}
       start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }} style={[styles.container, { backgroundColor: finalColor }, style && style]}>
+      end={{ x: 0, y: 1 }} style={[styles.container, { backgroundColor: finalColor, direction: isRTL ? 'rtl' : 'ltr' }, style && style]}>
       {children}
     </LinearGradient>
   )

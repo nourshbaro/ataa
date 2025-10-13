@@ -8,7 +8,7 @@ const NoInternet = () => {
         <ScreenWrapper>
             <View style={styles.container}>
                 <Image
-                    source={require('@/assets/images/nejmehGold.png')}
+                    source={require('@/assets/images/transparent.png')}
                     style={styles.backgroundImage}
                     resizeMode='contain'
                 />

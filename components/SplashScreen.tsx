@@ -41,14 +41,14 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({ onFinish }) => 
     <ScreenWrapper>
       <Animated.View style={[styles.container, { opacity }]}>
         <Image
-          source={require('@/assets/images/nejmehGold.png')}
+          source={require('@/assets/images/transparent.png')}
           style={styles.image}
           resizeMode="contain"
         />
         <View style={styles.footer}>
           <View style={styles.branding}>
             <Image
-              source={require('@/assets/images/ja-square.png')}
+              source={require('@/assets/images/transparent.png')}
               style={styles.logo}
               resizeMode="contain"
             />
