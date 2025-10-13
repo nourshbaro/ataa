@@ -40,15 +40,17 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({ onFinish }) => 
         <View style={styles.footer}>
           <View style={styles.branding}>
             <Image
-              source={require('@/assets/images/ja-square.png')}
+              source={theme.mode === 'dark'
+              ? require('@/assets/images/ja-square.png')
+              : require('@/assets/images/ja-logo.png')}
               style={styles.logo}
               resizeMode="contain"
             />
             <View style={styles.textBlock}>
-              <Typo style={styles.footerText} color={theme.colors.white}>
+              <Typo style={styles.footerText}>
                 Powered by
               </Typo>
-              <Typo style={styles.bold} color={theme.colors.white}>
+              <Typo style={styles.bold}>
                 Ja-Square
               </Typo>
             </View>

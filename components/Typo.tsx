@@ -17,7 +17,7 @@ const Typo = ({
 
     const { theme, mode } = useTheme();
 
-    const finalColor = color || theme.colors.white;
+    const finalColor = color || theme.colors.textPrimary;
     const textStyle: TextStyle = {
         fontSize: size ? verticalScale(size) : verticalScale(18),
         color: finalColor,
