@@ -11,16 +11,22 @@ import { StyleSheet } from 'react-native';
 
 const index = () => {
   const { t, toggleLanguage, language } = useLanguage();
-  const { toggleTheme, theme } = useTheme()
+  const { toggleTheme, theme, mode } = useTheme()
   return (
     <ScreenWrapper>
       <Header rightIcon={<Ionicons
         name='person-circle-outline'
-        size={verticalScale(26)}
+        size={verticalScale(30)}
         color={theme.colors.white}
       />} />
       <Typo>{t('welcome')}</Typo>
       <Typo>{t('home')}</Typo>
+      <Button onPress={toggleTheme}>
+        <Typo>
+          {t('changeLanguage')}
+        </Typo>
+      </Button>
+      <Typo>Current: {mode}</Typo>
       <Button onPress={toggleLanguage}>
         <Typo>
           {t('changeLanguage')}

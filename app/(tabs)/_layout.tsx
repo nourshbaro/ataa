@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 const _layout = () => {
   const { theme } = useTheme()
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.primary }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <Tabs tabBar={(props) => <CustomTabs {...props} />} screenOptions={{ headerShown: false }}>
         <Tabs.Screen name="index" />
         <Tabs.Screen name="categories" />

@@ -1,18 +1,17 @@
 import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
-import { spacingX } from '@/types/theme';
+import { radius, spacingX, spacingY } from '@/types/theme';
 import { verticalScale } from '@/utils/styling';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { Platform, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
-import Typo from './Typo';
 
 type ValidIconName = 'home-outline' | 'football-outline' | 'basket-outline' | 'calendar-outline';
 
 const CustomTabs: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
     const { theme } = useTheme();
-    const { language, isRTL, t } = useLanguage();
+    const { isRTL, t } = useLanguage();
 
     const iconContainerBase: ViewStyle = {
         width: verticalScale(80),
@@ -28,7 +27,7 @@ const CustomTabs: React.FC<BottomTabBarProps> = ({ state, descriptors, navigatio
             <View style={[
                 iconContainerBase,
                 isFocused && {
-                    backgroundColor: theme.colors.secondary,
+                    backgroundColor: theme.colors.white,
                     borderRadius: verticalScale(20),
                     shadowColor: theme.colors.black,
                     shadowOffset: { width: 0, height: 2 },
@@ -40,13 +39,13 @@ const CustomTabs: React.FC<BottomTabBarProps> = ({ state, descriptors, navigatio
                 <Ionicons
                     name={name as ValidIconName}
                     size={verticalScale(22)}
-                    color={theme.colors.white}
+                    color={isFocused ? theme.colors.primary : theme.colors.white}
                     style={isRTL ? { transform: [{ scaleX: -1 }] } : undefined}
                 />
             </View>
-            <Typo size={12} color={theme.colors.white}>
+            {/* <Typo size={12} color={theme.colors.primary}>
                 {label}
-            </Typo>
+            </Typo> */}
         </>
     );
 
@@ -63,6 +62,7 @@ const CustomTabs: React.FC<BottomTabBarProps> = ({ state, descriptors, navigatio
             style={[
                 styles.tabbar,
                 {
+                    shadowColor: theme.colors.textPrimary,
                     backgroundColor: theme.colors.primary,
                     borderTopColor: theme.colors.white,
                     flexDirection: isRTL ? 'row-reverse' : 'row',
@@ -120,11 +120,19 @@ export default CustomTabs;
 const styles = StyleSheet.create({
     tabbar: {
         flexDirection: 'row',
-        width: '100%',
-        height: Platform.OS === 'ios' ? verticalScale(80) : verticalScale(70),
+        // width: '100%',
+        height: Platform.OS === 'ios' ? verticalScale(80) : verticalScale(60),
         justifyContent: 'space-around',
         alignItems: 'center',
-        paddingHorizontal: spacingX._7
+        alignSelf: 'center',
+        paddingHorizontal: spacingX._7,
+        marginVertical: spacingY._25,
+        marginHorizontal: spacingX._20,
+        borderRadius: radius._30,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
     },
     tabbarItem: {
         flex: 1,
