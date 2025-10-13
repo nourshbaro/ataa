@@ -1,65 +1,81 @@
 import { AppTheme } from "@/types/theme";
 
 export const lightTheme: AppTheme = {
-    mode: 'light',
+    mode: "light",
     colors: {
-        primary: '#541926',
-        secondary: '#9E8743',
-        white: '#FFFFFF',
-        black: '#000000',
-        inputBackground: '#1c1c1c',
-        transparent: 'transparent',
-        tabBackground: '#322232',
-        containerBackground: '#373737',
-        skeletonBase: '#3A3A3A',
+        primary: "#60C3F4",          // Bright sky blue — main brand color
+        secondary: "#D288EB",        // Lavender purple — secondary highlight
+        white: "#FFFFFF",
+        black: "#000000",
+        inputBackground: "#F4F6F8",
+        transparent: "transparent",
+        tabBackground: "#F7F8FA",
+        containerBackground: "#FFFFFF",
+        skeletonBase: "#E3E7EB",
+        skeletonHighlight: "#F5F7FA",
 
-        accent: '#007BFF',
-        background: '#FFFFFF',
-        surface: '#F2F2F2',
-        textPrimary: '#000000',
-        textSecondary: '#555555',
-        border: '#E5E5E5',
-        error: '#D9534F',
-        success: '#2ECC71',
-        warning: '#F4BC1C',
-        info: '#007BFF',
-        disabled: '#B0B0B0',
-        loadingSpinner: '#007BFF',
-        overlay: 'rgba(0, 0, 0, 0.05)',
-        gradient: ['#FFFFFF', '#F4F4F4'],
-        pending: '#CC8A00',
-        inReview: '#37474F',
-        resolved: '#00674F',
-        rejected: '#FF4C4C',
-        skeletonHighlight: '#F4F4F4',
+        accent: "#08557C",           
+        background: "#F7F8FA",      
+        surface: "#FFFFFF",          
+
+        textPrimary: "#1A1A1A",
+        textSecondary: "#797199",
+
+        border: "#E2E4E8",
+        error: "#D64545",
+        success: "#4CAF50",
+        warning: "#EFB366",
+        info: "#60C3F4",
+
+        disabled: "#C7CCD2",
+        loadingSpinner: "#9FC9D2",
+        overlay: "rgba(0, 0, 0, 0.1)",
+
+        gradient: ["#60C3F4", "#D288EB"],
+
+        pending: "#EFB366",
+        inReview: "#9FC9D2",
+        resolved: "#4CAF50",
+        rejected: "#D64545",
     },
 };
 
-// export const darkTheme: AppTheme = {
-//     mode: 'dark',
-//     colors: {
-//         primary: '#FFFFFF',              // Main text color
-//         primaryLight: '#CCCCCC',         // Less emphasis text
-//         accent: '#3399FF',               // Blue for links, buttons
-//         background: '#121212',           // Main background
-//         surface: '#1C1C1C',              // Cards, modals
-//         textPrimary: '#FFFFFF',          // Headlines
-//         textSecondary: '#AAAAAA',        // Subtext
-//         border: '#2C2C2C',               // Dividers, card edges
-//         error: '#FF6B6B',
-//         success: '#00B894',
-//         warning: '#F4D35E',
-//         info: '#3399FF',
-//         disabled: '#666666',
-//         loadingSpinner: '#3399FF',
-//         overlay: 'rgba(255, 255, 255, 0.05)',
-//         white: '#FFFFFF',
-//         gradient: ['#1A1A1A', '#2A2A2A'], // Optional background gradient
-//         pending: '#FFD93B',
-//         inReview: '#61A0FF',
-//         resolved: '#00B894',
-//         rejected: '#FF6B6B',
-//         skeletonBase: '#2C2C2C',       // Matches border tone
-// skeletonHighlight: '#3A3A3A',  // Slightly lighter shimmer
-//     },
-// };
+export const darkTheme: AppTheme = {
+    mode: "dark",
+    colors: {
+        primary: "#2A94C4",          // Muted blue
+        secondary: "#B05FD0",        // Deeper purple
+        white: "#FFFFFF",
+        black: "#000000",
+        inputBackground: "#1E1F22",
+        transparent: "transparent",
+        tabBackground: "#1A1B1D",
+        containerBackground: "#1C1E20",
+        skeletonBase: "#2A2D31",
+        skeletonHighlight: "#3B3E42",
+
+        accent: "#60C3F4",
+        background: "#101214",
+        surface: "#1C1E20",
+
+        textPrimary: "#EAEAEA",
+        textSecondary: "#AFA8C2",
+
+        border: "#33363A",
+        error: "#F07373",
+        success: "#81C784",
+        warning: "#D49B53",
+        info: "#2A94C4",
+
+        disabled: "#4E7C85",
+        loadingSpinner: "#9FC9D2",
+        overlay: "rgba(0, 0, 0, 0.5)",
+
+        gradient: ["#08557C", "#484124"],
+
+        pending: "#D49B53",
+        inReview: "#4E7C85",
+        resolved: "#81C784",
+        rejected: "#F07373",
+    },
+};

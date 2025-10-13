@@ -4,13 +4,14 @@ export type ThemeMode = 'light' | 'dark';
 export type ThemeColors = {
   primary: string;
   secondary: string;
-  white: string,
-  black: string,
-  inputBackground: string,
-  transparent: string,
-  tabBackground: string,
-  containerBackground: string,
-  skeletonBase: string,
+  white: string;
+  black: string;
+  inputBackground: string;
+  transparent: string;
+  tabBackground: string;
+  containerBackground: string;
+  skeletonBase: string;
+  skeletonHighlight: string;
 
   accent: string;
   background: string;
@@ -30,8 +31,6 @@ export type ThemeColors = {
   inReview: string;
   resolved: string;
   rejected: string;
-  skeletonHighlight: string,
-
 };
 
 export type AppTheme = {

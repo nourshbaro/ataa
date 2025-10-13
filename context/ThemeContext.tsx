@@ -1,12 +1,12 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Appearance } from 'react-native';
-import { lightTheme } from '../constants/theme';
+import { darkTheme, lightTheme } from '../constants/theme';
 import { AppTheme, ThemeMode } from '../types/theme';
 
 // type ThemeMode = 'light' | 'dark';
 
-const STORAGE_KEY = 'elbeiruty_theme';
+const STORAGE_KEY = 'ataa_theme';
 
 interface ThemeContextType {
   theme: AppTheme;
@@ -20,7 +20,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [mode, setMode] = useState<ThemeMode>('light');
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const theme = lightTheme;
+  const theme = mode === 'dark' ? darkTheme : lightTheme;
 
   useEffect(() => {
     const loadTheme = async () => {

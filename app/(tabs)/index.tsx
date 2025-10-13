@@ -2,16 +2,18 @@ import Button from '@/components/Button';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { useLanguage } from '@/context/LanguageContext';
+import { useTheme } from '@/context/ThemeContext';
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 
 const index = () => {
   const { t, toggleLanguage, language } = useLanguage();
+  const { toggleTheme } = useTheme()
   return (
     <ScreenWrapper>
       <Text>{t('welcome')}</Text>
       <Text>{t('home')}</Text>
-      <Button onPress={toggleLanguage}>
+      <Button onPress={toggleTheme}>
         <Typo>
           {t('changeLanguage')}
         </Typo>

@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import en from '../locale/en/translation.json';
 import ar from '../locale/ar/translation.json';
 
-const STORAGE_KEY = 'elbeiruty_language';
+const STORAGE_KEY = 'ataa_language';
 
 type Language = 'en' | 'ar';
 type Translations = Record<string, string>;

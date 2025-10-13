@@ -48,7 +48,7 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({ onFinish }) => 
         <View style={styles.footer}>
           <View style={styles.branding}>
             <Image
-              source={require('@/assets/images/transparent.png')}
+              source={require('@/assets/images/ja-square.png')}
               style={styles.logo}
               resizeMode="contain"
             />

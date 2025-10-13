@@ -15,7 +15,7 @@ const ScreenWrapper = ({ style, children }: ScreenWrapperProps) => {
 
   return (
     <LinearGradient
-      colors={[theme.colors.primary, theme.colors.black]}
+      colors={[theme.colors.primary, theme.colors.background]}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       style={[styles.fullScreen, { paddingTop, direction: isRTL ? 'rtl' : 'ltr' }, style]}
