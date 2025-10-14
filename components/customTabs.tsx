@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
         bottom: Platform.OS === 'ios' ? verticalScale(20) : verticalScale(15),
         left: verticalScale(20),
         right: verticalScale(20),
-        height: Platform.OS === 'ios' ? verticalScale(60) : verticalScale(45),
+        height: Platform.OS === 'ios' ? verticalScale(45) : verticalScale(45),
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center',
