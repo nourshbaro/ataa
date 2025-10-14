@@ -126,3 +126,20 @@ export type Categories = {
   name: string;
   icon?: string;
 }
+
+export type CatCampaignType = {
+  id: number;
+  title: string;
+  description: string;
+  goal_amount: string;
+  start_date: string;
+  end_date: string;
+  featured_image: string | null;
+  category: string;
+  ngo: string;
+  progress: {
+    raised: string | number;
+    percentage: number;
+    remaining: number;
+  };
+};

@@ -87,7 +87,6 @@ const LatestCategories = ({
                 />
             )}
         </View>
-
     );
 };
 

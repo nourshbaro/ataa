@@ -119,26 +119,50 @@ export default CustomTabs;
 
 const styles = StyleSheet.create({
     tabbar: {
+        // flexDirection: 'row',
+        // // width: '100%',
+        // height: Platform.OS === 'ios' ? verticalScale(80) : verticalScale(60),
+        // justifyContent: 'space-around',
+        // alignItems: 'center',
+        // alignSelf: 'center',
+        // paddingHorizontal: spacingX._7,
+        // marginVertical: spacingY._25,
+        // marginHorizontal: spacingX._20,
+        // borderRadius: radius._30,
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.2,
+        // shadowRadius: 4,
+        // elevation: 3,
+
+        position: 'absolute', // floating
+        bottom: Platform.OS === 'ios' ? verticalScale(20) : verticalScale(15),
+        left: verticalScale(20),
+        right: verticalScale(20),
+        height: Platform.OS === 'ios' ? verticalScale(70) : verticalScale(60),
         flexDirection: 'row',
-        // width: '100%',
-        height: Platform.OS === 'ios' ? verticalScale(80) : verticalScale(60),
         justifyContent: 'space-around',
         alignItems: 'center',
-        alignSelf: 'center',
-        paddingHorizontal: spacingX._7,
-        marginVertical: spacingY._25,
-        marginHorizontal: spacingX._20,
+        backgroundColor: 'transparent', // main color applied inside inner container
+        zIndex: 10,
         borderRadius: radius._30,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 4,
         elevation: 3,
+        marginHorizontal: spacingX._10,
+        paddingHorizontal: spacingX._7,
+        marginVertical: spacingY._25,
     },
+    // tabbarItem: {
+    //     flex: 1,
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    //     // marginBottom: Platform.OS === 'ios' ? spacingY._15 : spacingY._15,
+    //     // marginTop: Platform.OS === 'ios' ? spacingX._3 : spacingX._3,
+    // }
     tabbarItem: {
-        flex: 1,
+        flex: 0, // don't stretch
         alignItems: 'center',
         justifyContent: 'center',
-        // marginBottom: Platform.OS === 'ios' ? spacingY._15 : spacingY._15,
-        marginTop: Platform.OS === 'ios' ? spacingX._3 : spacingX._3,
-    }
+    },
 })
