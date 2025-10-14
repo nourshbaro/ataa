@@ -8,7 +8,7 @@ import Skeleton from '@/components/skeleton';
 import Typo from '@/components/Typo';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
-import { spacingY } from '@/types/theme';
+import { spacingX, spacingY } from '@/types/theme';
 import { Campaigns, Categories } from '@/types/types';
 import { verticalScale } from '@/utils/styling';
 import { Ionicons } from '@expo/vector-icons';
@@ -128,40 +128,35 @@ const index = () => {
         keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={
           !showEmpty ? (
-            <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
+            <View style={{ marginVertical: spacingY._5, alignItems: 'center', marginHorizontal: spacingX._20 }}>
               <View
                 style={{
                   backgroundColor: theme.colors.containerBackground,
                   borderRadius: 16,
                   paddingBottom: 10,
-                  marginHorizontal: 6,
-                  width: screenWidth * 0.90,
+                  width: screenWidth * 0.9,
                   overflow: "hidden",
                 }}
               >
                 <Skeleton height={200} radius={16} />
-
                 <Skeleton
                   height={20}
                   width={'50%'}
                   radius={6}
                   style={{ marginTop: 8, marginHorizontal: 10 }}
                 />
-
                 <Skeleton
                   height={1}
                   width={'87%'}
                   radius={0}
                   style={{ marginVertical: 8, marginHorizontal: 20, alignSelf: "center" }}
                 />
-
                 <Skeleton
                   height={10}
                   width={'90%'}
                   radius={6}
                   style={{ marginVertical: 8, marginHorizontal: 10, alignSelf: "center" }}
                 />
-
                 <View
                   style={{
                     flexDirection: "row",
@@ -186,7 +181,7 @@ const index = () => {
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
-            <CampaignCard {...item} cardWidth={screenWidth * 0.95} />
+            <CampaignCard {...item} cardWidth={screenWidth * 0.9} />
           </View>
         )}
         ListHeaderComponent={
@@ -200,8 +195,8 @@ const index = () => {
 
             <LatestCampaign
               data={latestCampaign}
-              isRefreshing={isRefreshing}
-              onRefresh={onRefresh}
+              // isRefreshing={isRefreshing}
+              // onRefresh={onRefresh}
               isLoading={isLoadingLatestCampaign}
             />
 
@@ -209,8 +204,8 @@ const index = () => {
               categories={latestCategories}
               selectedId={selectedCategory}
               onSelect={handleCategorySelect}
-              isRefreshing={isRefreshing}
-              onRefresh={onRefresh}
+              // isRefreshing={isRefreshing}
+              // onRefresh={onRefresh}
               isLoading={isLoadingLatestCategory}
             />
           </>
@@ -238,6 +233,35 @@ const index = () => {
         }
         contentContainerStyle={styles.scrollViewStyle}
         inverted={isRTL}
+        ListFooterComponent={
+          catCampaign.length > 0 ? (
+            <View style={{ alignItems: 'center', marginVertical: spacingY._10 }}>
+              <Pressable
+                onPress={() => router.push(`/(tabs)/campaigns`)}
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  paddingVertical: 10,
+                  paddingHorizontal: 20,
+                  borderRadius: 12,
+                  shadowColor: theme.colors.primary,
+                  shadowOpacity: 0.3,
+                  shadowRadius: 6,
+                  elevation: 4,
+                }}
+              >
+                <Typo color={theme.colors.white} style={{ fontWeight: 'bold' }}>
+                  See more from this category
+                </Typo>
+              </Pressable>
+            </View>
+          ) : null
+        }
+
+
+        directionalLockEnabled={true}
+        bounces={false}
+        alwaysBounceVertical={false}
+        scrollEventThrottle={16}
       />
 
       {/* <Typo>{t('welcome')}</Typo>
@@ -273,6 +297,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: verticalScale(20),
     marginBottom: verticalScale(10),
+    marginTop: verticalScale(20),
   },
   mainTitle: {
     fontSize: verticalScale(20),
@@ -280,6 +305,7 @@ const styles = StyleSheet.create({
   },
   seeAll: {
     fontSize: verticalScale(14),
-    fontWeight: '500'
+    fontWeight: '500',
+    marginTop: verticalScale(5)
   },
 })

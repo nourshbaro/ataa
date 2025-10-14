@@ -1,6 +1,6 @@
 import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
-import { radius, spacingX, spacingY } from '@/types/theme';
+import { radius, spacingY } from '@/types/theme';
 import { verticalScale } from '@/utils/styling';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
@@ -23,12 +23,13 @@ const CustomTabs: React.FC<BottomTabBarProps> = ({ state, descriptors, navigatio
     };
 
     const renderTabIcon = (name: string, label: string, isFocused: boolean) => (
-        <>
+        <View style={{ overflow: 'hidden', borderRadius: verticalScale(20) }}>
+
             <View style={[
                 iconContainerBase,
                 isFocused && {
                     backgroundColor: theme.colors.white,
-                    borderRadius: verticalScale(20),
+                    // borderRadius: verticalScale(20),
                     shadowColor: theme.colors.black,
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.2,
@@ -46,7 +47,7 @@ const CustomTabs: React.FC<BottomTabBarProps> = ({ state, descriptors, navigatio
             {/* <Typo size={12} color={theme.colors.primary}>
                 {label}
             </Typo> */}
-        </>
+        </View>
     );
 
     const tabbarIcons: any = {
@@ -138,9 +139,9 @@ const styles = StyleSheet.create({
         bottom: Platform.OS === 'ios' ? verticalScale(20) : verticalScale(15),
         left: verticalScale(20),
         right: verticalScale(20),
-        height: Platform.OS === 'ios' ? verticalScale(70) : verticalScale(60),
+        height: Platform.OS === 'ios' ? verticalScale(60) : verticalScale(45),
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-evenly',
         alignItems: 'center',
         backgroundColor: 'transparent', // main color applied inside inner container
         zIndex: 10,
@@ -149,8 +150,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 4,
         elevation: 3,
-        marginHorizontal: spacingX._10,
-        paddingHorizontal: spacingX._7,
+        // marginHorizontal: spacingX._10,
+        // paddingHorizontal: spacingX._7,
         marginVertical: spacingY._25,
     },
     // tabbarItem: {

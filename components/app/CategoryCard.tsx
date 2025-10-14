@@ -11,9 +11,19 @@ type Props = {
   icon?: string;
   selectedId: number;
   onSelect: (id: number) => void;
+  width?: number;
+  height?: number;
 };
 
-const CategoryCard = ({ id, name, icon, selectedId, onSelect }: Props) => {
+const CategoryCard = ({
+  id,
+  name,
+  icon,
+  selectedId,
+  onSelect,
+  width = verticalScale(75),
+  height = verticalScale(65),
+}: Props) => {
   const { theme } = useTheme();
   const isSelected = id === selectedId;
   const borderColor = isSelected ? theme.colors.primary : theme.colors.border;
@@ -38,8 +48,8 @@ const CategoryCard = ({ id, name, icon, selectedId, onSelect }: Props) => {
     >
       <View
         style={{
-          width: verticalScale(75),
-          height: verticalScale(65),
+          width,
+          height,
           borderRadius: 12,
           borderWidth: 2,
           borderColor,

@@ -1,7 +1,7 @@
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { styles } from "@/styles/latestCampaign.styles";
-import { spacingY } from "@/types/theme";
+import { spacingX, spacingY } from "@/types/theme";
 import { CampaignCardProps } from "@/types/types"; // adjust path if different
 import { Ionicons } from "@expo/vector-icons";
 import React, { useMemo, useState } from "react";
@@ -34,40 +34,35 @@ const CampaignCard = ({
 
     if (isLoading) {
         return (
-            <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
+            <View style={{ marginVertical: spacingY._5, alignItems: 'center', marginHorizontal: spacingX._20 }}>
                 <View
                     style={{
                         backgroundColor: theme.colors.containerBackground,
                         borderRadius: 16,
                         paddingBottom: 10,
-                        marginHorizontal: 6,
                         width: cardWidth,
                         overflow: "hidden",
                     }}
                 >
                     <Skeleton height={200} radius={16} />
-
                     <Skeleton
                         height={20}
                         width={'50%'}
                         radius={6}
                         style={{ marginTop: 8, marginHorizontal: 10 }}
                     />
-
                     <Skeleton
                         height={1}
                         width={'87%'}
                         radius={0}
                         style={{ marginVertical: 8, marginHorizontal: 20, alignSelf: "center" }}
                     />
-
                     <Skeleton
                         height={10}
                         width={'90%'}
                         radius={6}
                         style={{ marginVertical: 8, marginHorizontal: 10, alignSelf: "center" }}
                     />
-
                     <View
                         style={{
                             flexDirection: "row",
@@ -97,7 +92,7 @@ const CampaignCard = ({
             onPress={() => { }}
         >
             {/* Image Section */}
-            <View style={styles.imageWrapper}>
+            <View style={[styles.imageWrapper, { shadowColor: theme.colors.primary, }]}>
                 <Image source={featured_image ? { uri: featured_image } : require('../../assets/images/transparent.png')} style={styles.image} resizeMode="cover" />
 
                 {/* Favorite Icon */}
