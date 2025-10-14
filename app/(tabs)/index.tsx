@@ -1,21 +1,25 @@
 import apiClient from '@/api/apiClient';
-import CatCampaign from '@/components/app/CatCampaign';
+import CampaignCard from '@/components/app/CampaignCard';
 import LatestCampaign from '@/components/app/LatestCampaign';
 import LatestCategories from '@/components/app/LatestCategories';
 import Header from '@/components/header';
 import ScreenWrapper from '@/components/ScreenWrapper';
+import Skeleton from '@/components/skeleton';
 import Typo from '@/components/Typo';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
-import { Campaigns, CatCampaignType, Categories } from '@/types/types';
+import { spacingY } from '@/types/theme';
+import { Campaigns, Categories } from '@/types/types';
 import { verticalScale } from '@/utils/styling';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, FlatList, Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+
+const { width: screenWidth } = Dimensions.get('window');
 
 const index = () => {
-  const { t, toggleLanguage, language } = useLanguage();
+  const { t, toggleLanguage, language, isRTL } = useLanguage();
   const { toggleTheme, theme, mode } = useTheme()
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isLoadingLatestCampaign, setIsLoadingLatestCampaign] = useState(true);
@@ -23,9 +27,10 @@ const index = () => {
   const [isLoadingCatCampaign, setIsLoadingCatCampaign] = useState(true);
   const [latestCampaign, setLatestCampaign] = useState<Campaigns[]>([]);
   const [latestCategories, setLatestCategories] = useState<Categories[]>([]);
-  const [catCampaign, setCatCampaign] = useState<CatCampaignType[]>([]);
+  const [catCampaign, setCatCampaign] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number>(-1);
   const [prevCategory, setPrevCategory] = useState<number>(-1);
+  const [showEmpty, setShowEmpty] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -102,6 +107,15 @@ const index = () => {
     }
   };
 
+  useEffect(() => {
+    if (!isLoadingCatCampaign && catCampaign.length === 0) {
+      const timer = setTimeout(() => setShowEmpty(true), 100);
+      return () => clearTimeout(timer);
+    } else {
+      setShowEmpty(false);
+    }
+  }, [isLoadingCatCampaign, catCampaign]);
+
   return (
     <ScreenWrapper>
       <Header rightIcon={<Ionicons
@@ -109,37 +123,124 @@ const index = () => {
         size={verticalScale(30)}
         color={theme.colors.primary}
       />} />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <FlatList
+        data={catCampaign}
+        keyExtractor={(item) => item.id.toString()}
+        ListEmptyComponent={
+          !showEmpty ? (
+            <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
+              <View
+                style={{
+                  backgroundColor: theme.colors.containerBackground,
+                  borderRadius: 16,
+                  paddingBottom: 10,
+                  marginHorizontal: 6,
+                  width: screenWidth * 0.90,
+                  overflow: "hidden",
+                }}
+              >
+                <Skeleton height={200} radius={16} />
 
-        <View style={styles.titleHeader}>
-          <Typo style={styles.mainTitle} color={theme.colors.textPrimary}>Latest Campaigns</Typo>
-          <Pressable onPress={() => { router.push('/(tabs)/campaigns') }}>
-            <Typo style={styles.seeAll} color={theme.colors.textSecondary}>More</Typo>
-          </Pressable>
-        </View>
-        <LatestCampaign
-          data={latestCampaign}
-          isRefreshing={isRefreshing}
-          onRefresh={onRefresh}
-          isLoading={isLoadingLatestCampaign}
-        />
-        <LatestCategories
-          categories={latestCategories}
-          selectedId={selectedCategory}
-          onSelect={handleCategorySelect}
-          isRefreshing={isRefreshing}
-          onRefresh={onRefresh}
-          isLoading={isLoadingLatestCategory}
-        />
+                <Skeleton
+                  height={20}
+                  width={'50%'}
+                  radius={6}
+                  style={{ marginTop: 8, marginHorizontal: 10 }}
+                />
 
-        <CatCampaign
-          data={catCampaign}
-          isRefreshing={isRefreshing}
-          onRefresh={onRefresh}
-          isLoading={isLoadingCatCampaign}
-        />
+                <Skeleton
+                  height={1}
+                  width={'87%'}
+                  radius={0}
+                  style={{ marginVertical: 8, marginHorizontal: 20, alignSelf: "center" }}
+                />
 
-        {/* <Typo>{t('welcome')}</Typo>
+                <Skeleton
+                  height={10}
+                  width={'90%'}
+                  radius={6}
+                  style={{ marginVertical: 8, marginHorizontal: 10, alignSelf: "center" }}
+                />
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginHorizontal: 10,
+                    marginTop: 8,
+                  }}
+                >
+                  <Skeleton width="60%" height={16} radius={4} />
+                  <Skeleton width={40} height={16} radius={4} />
+                </View>
+              </View>
+            </View>
+          ) : (
+            <View style={{ marginTop: spacingY._15 }}>
+              <Typo size={15} color={theme.colors.textSecondary} style={{ textAlign: 'center' }}>
+                {'No items found'}
+              </Typo>
+            </View>
+          )
+        }
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
+            <CampaignCard {...item} cardWidth={screenWidth * 0.95} />
+          </View>
+        )}
+        ListHeaderComponent={
+          <>
+            <View style={styles.titleHeader}>
+              <Typo style={styles.mainTitle} color={theme.colors.textPrimary}>Latest Campaigns</Typo>
+              <Pressable onPress={() => { router.push('/(tabs)/campaigns') }}>
+                <Typo style={styles.seeAll} color={theme.colors.textSecondary}>More</Typo>
+              </Pressable>
+            </View>
+
+            <LatestCampaign
+              data={latestCampaign}
+              isRefreshing={isRefreshing}
+              onRefresh={onRefresh}
+              isLoading={isLoadingLatestCampaign}
+            />
+
+            <LatestCategories
+              categories={latestCategories}
+              selectedId={selectedCategory}
+              onSelect={handleCategorySelect}
+              isRefreshing={isRefreshing}
+              onRefresh={onRefresh}
+              isLoading={isLoadingLatestCategory}
+            />
+          </>
+        }
+        // ListFooterComponent={
+        //   paginationLoading && hasMore ? (
+        //     <View style={{ paddingVertical: 20 }}>
+        //       <Loading />
+        //     </View>
+        //   ) : null
+        // }
+        // onEndReached={() => {
+        //   if (hasMore && !paginationLoading) {
+        //     setPage(prev => prev + 1);
+        //   }
+        // }}
+        onEndReachedThreshold={0.5}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+            colors={[theme.colors.primary]}
+            tintColor={theme.colors.white}
+          />
+        }
+        contentContainerStyle={styles.scrollViewStyle}
+        inverted={isRTL}
+      />
+
+      {/* <Typo>{t('welcome')}</Typo>
       <Typo>{t('home')}</Typo>
       <Button onPress={toggleTheme}>
         <Typo>
@@ -153,7 +254,6 @@ const index = () => {
         </Typo>
       </Button>
       <Typo>Current: {language}</Typo> */}
-      </ScrollView>
     </ScreenWrapper>
   )
 }
@@ -161,6 +261,11 @@ const index = () => {
 export default index
 
 const styles = StyleSheet.create({
+  scrollViewStyle: {
+    // marginTop: spacingY._10,
+    paddingBottom: verticalScale(100),
+    // gap: spacingY._25
+  },
   titleHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',

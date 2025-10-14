@@ -8,6 +8,7 @@ import React, { useMemo, useState } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
 import * as Progress from "react-native-progress";
 import Typo from "../Typo";
+import Skeleton from "../skeleton";
 
 const CampaignCard = ({
     id,
@@ -17,7 +18,8 @@ const CampaignCard = ({
     ngo,
     progress,
     cardWidth,
-}: CampaignCardProps & { cardWidth?: number }) => {
+    isLoading,
+}: CampaignCardProps & { cardWidth?: number, isLoading?: boolean }) => {
     const { theme } = useTheme();
     const { isRTL } = useLanguage();
     const [isFavorite, setIsFavorite] = useState(false);
@@ -30,8 +32,60 @@ const CampaignCard = ({
         return diff;
     }, [end_date]);
 
+    if (isLoading) {
+        return (
+            <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
+                <View
+                    style={{
+                        backgroundColor: theme.colors.containerBackground,
+                        borderRadius: 16,
+                        paddingBottom: 10,
+                        marginHorizontal: 6,
+                        width: cardWidth,
+                        overflow: "hidden",
+                    }}
+                >
+                    <Skeleton height={200} radius={16} />
+
+                    <Skeleton
+                        height={20}
+                        width={'50%'}
+                        radius={6}
+                        style={{ marginTop: 8, marginHorizontal: 10 }}
+                    />
+
+                    <Skeleton
+                        height={1}
+                        width={'87%'}
+                        radius={0}
+                        style={{ marginVertical: 8, marginHorizontal: 20, alignSelf: "center" }}
+                    />
+
+                    <Skeleton
+                        height={10}
+                        width={'90%'}
+                        radius={6}
+                        style={{ marginVertical: 8, marginHorizontal: 10, alignSelf: "center" }}
+                    />
+
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            marginHorizontal: 10,
+                            marginTop: 8,
+                        }}
+                    >
+                        <Skeleton width="60%" height={16} radius={4} />
+                        <Skeleton width={40} height={16} radius={4} />
+                    </View>
+                </View>
+            </View>
+        );
+    }
+
     return (
-        <View
+        <TouchableOpacity
             style={[
                 styles.card,
                 {
@@ -40,10 +94,11 @@ const CampaignCard = ({
                     width: cardWidth,
                 },
             ]}
+            onPress={() => { }}
         >
             {/* Image Section */}
             <View style={styles.imageWrapper}>
-                <Image source={{ uri: featured_image }} style={styles.image} resizeMode="cover" />
+                <Image source={featured_image ? { uri: featured_image } : require('../../assets/images/transparent.png')} style={styles.image} resizeMode="cover" />
 
                 {/* Favorite Icon */}
                 <TouchableOpacity
@@ -101,7 +156,7 @@ const CampaignCard = ({
                 </Typo>
                 <Typo style={{ fontWeight: 'bold', fontSize: 15 }} color={theme.colors.textSecondary}>{progress.percentage}%</Typo>
             </View>
-        </View >
+        </TouchableOpacity>
     );
 };
 
