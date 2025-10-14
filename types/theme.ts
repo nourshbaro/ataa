@@ -18,6 +18,7 @@ export type ThemeColors = {
   surface: string;
   textPrimary: string;
   textSecondary: string;
+  text: string;
   border: string;
   error: string;
   success: string;

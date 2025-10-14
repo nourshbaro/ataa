@@ -20,6 +20,7 @@ export const lightTheme: AppTheme = {
 
         textPrimary: "#1A1A1A",
         textSecondary: "#797199",
+        text: "#797199",
 
         border: "#E2E4E8",
         error: "#D64545",
@@ -60,6 +61,7 @@ export const darkTheme: AppTheme = {
 
         textPrimary: "#EAEAEA",
         textSecondary: "#AFA8C2",
+        text: "#797199",
 
         border: "#33363A",
         error: "#F07373",
