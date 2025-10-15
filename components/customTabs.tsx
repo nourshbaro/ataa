@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
         // shadowRadius: 4,
         // elevation: 3,
 
-        position: 'absolute', // floating
+        position: 'absolute',
         bottom: Platform.OS === 'ios' ? verticalScale(20) : verticalScale(15),
         left: verticalScale(20),
         right: verticalScale(20),
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        backgroundColor: 'transparent', // main color applied inside inner container
+        backgroundColor: 'transparent',
         zIndex: 10,
         borderRadius: radius._30,
         shadowOffset: { width: 0, height: 2 },

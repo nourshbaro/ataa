@@ -49,10 +49,8 @@ const category = () => {
         try {
             setIsLoadingCategory(true);
 
-            const [categoryRes] = await Promise.all([
-                apiClient.get("/api/categories/all"),
-            ]);
-
+            const categoryRes = await apiClient.get("/api/categories/all")
+ 
             const categories = categoryRes.data.data;
             setCategories(categories)
         } catch (err: any) {
@@ -90,7 +88,8 @@ const category = () => {
                             justifyContent: 'center',
                             alignItems: 'center',
                             paddingHorizontal: verticalScale(12),
-                            marginBottom: verticalScale(10),
+                            // marginBottom: verticalScale(10),
+                            paddingBottom: verticalScale(100),
                         }}
                         showsHorizontalScrollIndicator={false}
                     />
@@ -115,12 +114,14 @@ const category = () => {
                         numColumns={3}
                         columnWrapperStyle={{
                             justifyContent: 'space-between', 
-                            marginBottom: verticalScale(10),
+                            // marginBottom: verticalScale(10),
+                            paddingBottom: verticalScale(100),
                         }}
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={{
                             paddingHorizontal: verticalScale(12),
-                            marginBottom: verticalScale(10),
+                            // marginBottom: verticalScale(10),
+                            paddingBottom: verticalScale(100),
                         }}
                         refreshControl={
                             <RefreshControl
@@ -130,7 +131,7 @@ const category = () => {
                                 tintColor={theme.colors.primary}
                             />
                         }
-                        inverted={isRTL}
+                        // inverted={isRTL}
                         directionalLockEnabled={true}
                         bounces={false}
                         alwaysBounceVertical={false}

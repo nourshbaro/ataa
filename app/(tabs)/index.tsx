@@ -20,7 +20,7 @@ const { width: screenWidth } = Dimensions.get('window');
 
 const index = () => {
   const { t, toggleLanguage, language, isRTL } = useLanguage();
-  const { toggleTheme, theme, mode } = useTheme()
+  const { theme, mode } = useTheme()
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isLoadingLatestCampaign, setIsLoadingLatestCampaign] = useState(true);
   const [isLoadingLatestCategory, setIsLoadingLatestCategory] = useState(true);
@@ -232,7 +232,7 @@ const index = () => {
           />
         }
         contentContainerStyle={styles.scrollViewStyle}
-        inverted={isRTL}
+        // inverted={isRTL}
         ListFooterComponent={
           catCampaign.length > 0 ? (
             <View style={{ alignItems: 'center', marginVertical: spacingY._10 }}>

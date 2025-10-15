@@ -92,7 +92,7 @@ const LatestCampaign = ({ data, isLoading }: LatestCampaignProps) => {
             alignItems: "center",
             padding: verticalScale(15),
           }}
-          inverted={isRTL}
+          // inverted={isRTL}
           directionalLockEnabled={true}
           bounces={false}
           alwaysBounceVertical={false}
