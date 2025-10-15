@@ -4,6 +4,7 @@ import { styles } from "@/styles/latestCampaign.styles";
 import { spacingX, spacingY } from "@/types/theme";
 import { CampaignCardProps } from "@/types/types"; // adjust path if different
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useMemo, useState } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
 import * as Progress from "react-native-progress";
@@ -88,7 +89,12 @@ const CampaignCard = ({
                     width: cardWidth,
                 },
             ]}
-            onPress={() => { }}
+            onPress={() => {
+                router.push({
+                    pathname: '/single/[id]',
+                    params: { id: id },
+                });
+            }}
         >
             {/* Image Section */}
             <View style={[styles.imageWrapper, { shadowColor: theme.colors.primary, }]}>
@@ -102,7 +108,7 @@ const CampaignCard = ({
                     <Ionicons
                         name={isFavorite ? "heart" : "heart-outline"}
                         size={20}
-                        color={isFavorite ? "red" : theme.colors.textSecondary}
+                        color={isFavorite ? theme.colors.secondary : theme.colors.textSecondary}
                     />
                 </TouchableOpacity>
 

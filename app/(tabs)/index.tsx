@@ -31,6 +31,7 @@ const index = () => {
   const [selectedCategory, setSelectedCategory] = useState<number>(-1);
   const [prevCategory, setPrevCategory] = useState<number>(-1);
   const [showEmpty, setShowEmpty] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -56,6 +57,7 @@ const index = () => {
 
   const fetchData = async () => {
     try {
+      setErrorMessage('');
       setIsLoadingLatestCampaign(true);
       setIsLoadingLatestCategory(true);
       setIsLoadingCatCampaign(true);
@@ -81,6 +83,8 @@ const index = () => {
       }
     } catch (err: any) {
       console.log("Error:", err.message);
+      const message = err?.response?.data?.message || err?.message || 'Something went wrong.';
+      setErrorMessage(message);
     } finally {
       setIsLoadingLatestCampaign(false);
       setIsLoadingLatestCategory(false);
@@ -170,6 +174,8 @@ const index = () => {
                 </View>
               </View>
             </View>
+          ) : errorMessage ? (
+            <Typo style={styles.errorText} size={15} fontWeight={'400'}>{errorMessage}</Typo>
           ) : (
             <View style={{ marginTop: spacingY._15 }}>
               <Typo size={15} color={theme.colors.textSecondary} style={{ textAlign: 'center' }}>
@@ -184,7 +190,9 @@ const index = () => {
             <CampaignCard {...item} cardWidth={screenWidth * 0.9} />
           </View>
         )}
-        ListHeaderComponent={
+        ListHeaderComponent={errorMessage ? (
+          null
+        ) : (
           <>
             <View style={styles.titleHeader}>
               <Typo style={styles.mainTitle} color={theme.colors.textPrimary}>Latest Campaigns</Typo>
@@ -209,6 +217,7 @@ const index = () => {
               isLoading={isLoadingLatestCategory}
             />
           </>
+        )
         }
         // ListFooterComponent={
         //   paginationLoading && hasMore ? (
@@ -224,7 +233,7 @@ const index = () => {
         // }}
         onEndReachedThreshold={0.5}
         refreshControl={
-          <RefreshControl
+          < RefreshControl
             refreshing={isRefreshing}
             onRefresh={onRefresh}
             colors={[theme.colors.primary]}
@@ -269,22 +278,7 @@ const index = () => {
         alwaysBounceVertical={false}
         scrollEventThrottle={16}
       />
-
-      {/* <Typo>{t('welcome')}</Typo>
-      <Typo>{t('home')}</Typo>
-      <Button onPress={toggleTheme}>
-        <Typo>
-          {t('changeLanguage')}
-        </Typo>
-      </Button>
-      <Typo>Current: {mode}</Typo>
-      <Button onPress={toggleLanguage}>
-        <Typo>
-          {t('changeLanguage')}
-        </Typo>
-      </Button>
-      <Typo>Current: {language}</Typo> */}
-    </ScreenWrapper>
+    </ScreenWrapper >
   )
 }
 
@@ -313,5 +307,11 @@ const styles = StyleSheet.create({
     fontSize: verticalScale(14),
     fontWeight: '500',
     marginTop: verticalScale(5)
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 0,
+    alignSelf: 'center',
+    paddingHorizontal: verticalScale(50)
   },
 })

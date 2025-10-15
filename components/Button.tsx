@@ -26,7 +26,7 @@ const Button = ({
 
 
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: theme.colors.secondary }, style,]}>
+        <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: theme.colors.primary }, style,]}>
             {children}
         </TouchableOpacity>
     )

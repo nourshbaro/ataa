@@ -5,6 +5,7 @@ import Header from '@/components/header'
 import Loading from '@/components/Loading'
 import ModalWrapper from '@/components/modalWrapper'
 import Skeleton from '@/components/skeleton'
+import Typo from '@/components/Typo'
 import { useTheme } from '@/context/ThemeContext'
 import { spacingX, spacingY } from '@/types/theme'
 import { verticalScale } from '@/utils/styling'
@@ -24,6 +25,7 @@ const CategoryCampaign = () => {
     const [paginationLoading, setPaginationLoading] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isLoadingCampaign, setIsLoadingCampaign] = useState(true);
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         if (catcampId) fetchData(1);
@@ -47,12 +49,11 @@ const CategoryCampaign = () => {
 
     const fetchData = async (pageNumber = 1) => {
         try {
+            setErrorMessage('');
             if (pageNumber === 1) setIsLoadingCampaign(true);
             else setPaginationLoading(true);
 
-            const res = await apiClient.get(`/api/campaigns/category/${catcampId}?page=1`);
-            // console.log('API Response:', res.data); // 👈 check actual structure
-            // console.log(catcampId);
+            const res = await apiClient.get(`/api/campaigns/category/${catcampId}?page=${pageNumber}`);
 
             const newCampaigns = res.data.campaigns?.data || res.data.data || [];
             const totalPages = res.data.campaigns?.last_page || 1;
@@ -63,6 +64,8 @@ const CategoryCampaign = () => {
             setHasMore(pageNumber < totalPages);
         } catch (e: any) {
             console.log("Error fetching campaigns:", e.message);
+            const message = e?.response?.data?.message || e?.message || 'Something went wrong.';
+            setErrorMessage(message);
         } finally {
             setIsLoadingCampaign(false);
             setPaginationLoading(false);
@@ -120,43 +123,47 @@ const CategoryCampaign = () => {
                             </View>
                         </View>
                     </View>
+                ) : errorMessage ? (
+                    <Typo style={styles.errorText} size={15} fontWeight={'400'}>{errorMessage}</Typo>
                 ) : (
-                    <FlatList
-                        data={campaigns}
-                        renderItem={({ item }) => (
-                            <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
-                                <CampaignCard {...item} cardWidth={screenWidth * 0.9} isLoading={isLoadingCampaign} />
-                            </View>
-                        )}
-                        keyExtractor={(item) => item.id.toString()}
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{
-                            paddingHorizontal: verticalScale(12),
-                            marginBottom: verticalScale(10),
-                            paddingBottom: verticalScale(150),
-                        }}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={isRefreshing}
-                                onRefresh={onRefresh}
-                                colors={[theme.colors.primary]}
-                                tintColor={theme.colors.primary}
-                            />
-                        }
-                        ListFooterComponent={
-                            paginationLoading && hasMore ? (
-                                <View style={{ paddingVertical: 20 }}>
-                                    <Loading />
+                    <>
+                        <FlatList
+                            data={campaigns}
+                            renderItem={({ item }) => (
+                                <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
+                                    <CampaignCard {...item} cardWidth={screenWidth * 0.9} isLoading={isLoadingCampaign} />
                                 </View>
-                            ) : null
-                        }
-                        onEndReached={() => {
-                            if (hasMore && !paginationLoading) setPage(prev => prev + 1);
-                        }}
-                        onEndReachedThreshold={0.5}
-                        bounces={false}
-                        scrollEventThrottle={16}
-                    />
+                            )}
+                            keyExtractor={(item) => item.id.toString()}
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{
+                                paddingHorizontal: verticalScale(12),
+                                marginBottom: verticalScale(10),
+                                paddingBottom: verticalScale(150),
+                            }}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={isRefreshing}
+                                    onRefresh={onRefresh}
+                                    colors={[theme.colors.primary]}
+                                    tintColor={theme.colors.primary}
+                                />
+                            }
+                            ListFooterComponent={
+                                paginationLoading && hasMore ? (
+                                    <View style={{ paddingVertical: 20 }}>
+                                        <Loading />
+                                    </View>
+                                ) : null
+                            }
+                            onEndReached={() => {
+                                if (hasMore && !paginationLoading) setPage(prev => prev + 1);
+                            }}
+                            onEndReachedThreshold={0.5}
+                            bounces={false}
+                            scrollEventThrottle={16}
+                        />
+                    </>
                 )}
             </View>
         </ModalWrapper>
@@ -165,4 +172,11 @@ const CategoryCampaign = () => {
 
 export default CategoryCampaign;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    errorText: {
+        color: 'red',
+        marginTop: 0,
+        alignSelf: 'center',
+        paddingHorizontal: verticalScale(50)
+    },
+});

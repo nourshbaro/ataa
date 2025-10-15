@@ -22,7 +22,7 @@ const ModalWrapper = ({
     //   colors={[theme.colors.primary, theme.colors.black]}
     //   start={{ x: 0, y: 0 }}
     //   end={{ x: 0, y: 1 }} style={[styles.container, { backgroundColor: finalColor, direction: isRTL ? 'rtl' : 'ltr' }, style && style]}>
-    <View style={[styles.container, { backgroundColor: finalColor }, style && style]}>
+    <View style={[styles.container, { backgroundColor: finalColor,  direction: isRTL ? 'rtl' : 'ltr' }, style && style]}>
       {children}
     </View>
     // </LinearGradient>

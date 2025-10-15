@@ -62,7 +62,7 @@ const settings = () => {
                                 onPress={() => setThemeMode(m as ThemeMode)}
                                 style={[
                                     styles.themeButton,
-                                    mode === m && { backgroundColor: "#4A90E2" },
+                                    mode === m && { backgroundColor: theme.colors.primary },
                                 ]}
                             >
                                 <Typo
@@ -86,7 +86,7 @@ const settings = () => {
                                 onPress={() => setLanguage(lang as any)}
                                 style={[
                                     styles.themeButton,
-                                    language === lang && { backgroundColor: "#4A90E2" },
+                                    language === lang && { backgroundColor: theme.colors.primary },
                                 ]}
                             >
                                 <Typo

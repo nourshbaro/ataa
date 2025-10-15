@@ -100,6 +100,11 @@ export type Campaigns = {
     id: number;
     name: string;
   }
+  progress: {
+    raised: string;
+    percentage: number;
+    remaining: number;
+  },
 };
 
 export type CampaignCardProps = {

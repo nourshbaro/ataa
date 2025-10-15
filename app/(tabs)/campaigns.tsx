@@ -4,6 +4,7 @@ import Header from '@/components/header'
 import Loading from '@/components/Loading'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import Skeleton from '@/components/skeleton'
+import Typo from '@/components/Typo'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTheme } from '@/context/ThemeContext'
 import { spacingX, spacingY } from '@/types/theme'
@@ -19,12 +20,13 @@ const campaign = () => {
     const { theme } = useTheme();
     const { isRTL } = useLanguage();
 
-    const [isLoadingCampaign, setIsLoadingCampaign] = useState(true);
+    const [isLoadingCampaign, setIsLoadingCampaign] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
     const [campaigns, setCampaigns] = useState<CampaignCardProps[]>([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [paginationLoading, setPaginationLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const onRefresh = async () => {
         setIsRefreshing(true);
@@ -38,10 +40,19 @@ const campaign = () => {
         }
     };
 
+    const handleLoadMore = () => {
+        if (hasMore && !paginationLoading && !isLoadingCampaign) {
+            const nextPage = page + 1;
+            setPage(nextPage);
+            fetchData(nextPage);
+        }
+    };
+
     const fetchData = async (pageNumber = 1) => {
         try {
             if (pageNumber === 1) {
                 setIsLoadingCampaign(true);
+                setErrorMessage('');
             } else {
                 setPaginationLoading(true);
             }
@@ -59,6 +70,8 @@ const campaign = () => {
             setHasMore(pageNumber < totalPages);
         } catch (err: any) {
             console.log("Error:", err.message);
+            const message = err?.response?.data?.message || err?.message || 'Something went wrong.';
+            setErrorMessage(message);
         } finally {
             setIsLoadingCampaign(false);
             setPaginationLoading(false);
@@ -66,7 +79,9 @@ const campaign = () => {
     };
 
     useEffect(() => {
-        fetchData(page);
+        if (!errorMessage) {
+            fetchData(page);
+        }
     }, [page]);
 
     return (
@@ -121,46 +136,51 @@ const campaign = () => {
                         </View>
                     </View>
                 ) : (
-                    <FlatList
-                        data={campaigns}
-                        renderItem={({ item }) => (
-                            <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
-                                <CampaignCard {...item} cardWidth={screenWidth * 0.9} isLoading={isLoadingCampaign} />
-                            </View>
-                        )}
-                        keyExtractor={(item) => item.id.toString()}
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{
-                            paddingHorizontal: verticalScale(12),
-                            marginBottom: verticalScale(10),
-                            paddingBottom: verticalScale(150),
-                        }}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={isRefreshing}
-                                onRefresh={onRefresh}
-                                colors={[theme.colors.primary]}
-                                tintColor={theme.colors.primary}
-                            />
-                        }
-                        ListFooterComponent={
-                            paginationLoading && hasMore ? (
-                                <View style={{ paddingVertical: 20 }}>
-                                    <Loading />
+                    <>
+                        <FlatList
+                            data={campaigns}
+                            renderItem={({ item }) => (
+                                <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
+                                    <CampaignCard {...item} cardWidth={screenWidth * 0.9} isLoading={isLoadingCampaign} />
                                 </View>
-                            ) : null
-                        }
-                        onEndReached={() => {
-                            if (hasMore && !paginationLoading) {
-                                setPage(prev => prev + 1);
+                            )}
+                            keyExtractor={(item) => item.id.toString()}
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{
+                                paddingHorizontal: verticalScale(12),
+                                marginBottom: verticalScale(10),
+                                paddingBottom: verticalScale(150),
+                            }}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={isRefreshing}
+                                    onRefresh={onRefresh}
+                                    colors={[theme.colors.primary]}
+                                    tintColor={theme.colors.primary}
+                                />
                             }
-                        }}
-                        // inverted={isRTL}
-                        directionalLockEnabled={true}
-                        bounces={false}
-                        alwaysBounceVertical={false}
-                        scrollEventThrottle={16}
-                    />
+                            ListFooterComponent={
+                                paginationLoading && hasMore ? (
+                                    <View style={{ paddingVertical: 20 }}>
+                                        <Loading />
+                                    </View>
+                                ) : null
+                            }
+                            onEndReached={() => {
+                                if (hasMore && !paginationLoading) {
+                                    setPage(prev => prev + 1);
+                                }
+                            }}
+                            // inverted={isRTL}
+                            directionalLockEnabled={true}
+                            bounces={false}
+                            alwaysBounceVertical={false}
+                            scrollEventThrottle={16}
+                        />
+                        {errorMessage ? (
+                            <Typo style={styles.errorText} size={15} fontWeight={'400'}>{errorMessage}</Typo>
+                        ) : null}
+                    </>
                 )}
             </View>
         </ScreenWrapper>
@@ -169,4 +189,11 @@ const campaign = () => {
 
 export default campaign
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    errorText: {
+        color: 'red',
+        marginTop: 0,
+        alignSelf: 'center',
+        paddingHorizontal: verticalScale(50)
+    },
+})

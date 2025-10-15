@@ -3,6 +3,7 @@ import CategoryCard from '@/components/app/CategoryCard'
 import Header from '@/components/header'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import Skeleton from '@/components/skeleton'
+import Typo from '@/components/Typo'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTheme } from '@/context/ThemeContext'
 import { Categories } from '@/types/types'
@@ -27,6 +28,7 @@ const category = () => {
     const [isLoadingCategory, setIsLoadingCategory] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
     const [categories, setCategories] = useState<Categories[]>([]);
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         fetchData();
@@ -48,6 +50,7 @@ const category = () => {
 
     const fetchData = async () => {
         try {
+            setErrorMessage('');
             setIsLoadingCategory(true);
 
             const categoryRes = await apiClient.get("/api/categories/all")
@@ -56,6 +59,8 @@ const category = () => {
             setCategories(categories)
         } catch (err: any) {
             console.log("Error:", err.message);
+            const message = err?.response?.data?.message || err?.message || 'Something went wrong.';
+            setErrorMessage(message);
         } finally {
             setIsLoadingCategory(false);
         }
@@ -100,54 +105,59 @@ const category = () => {
                         showsHorizontalScrollIndicator={false}
                     />
                 ) : (
-                    <FlatList
-                        data={categories}
-                        key={`numColumns-3`}
-                        renderItem={({ item }) => (
-                            <View style={{ width: itemWidth, alignItems: 'center', marginBottom: verticalScale(10) }}>
-                                <CategoryCard
-                                    id={item.id}
-                                    name={item.name}
-                                    icon={item.icon}
-                                    selectedId={0}
-                                    onSelect={() => {
-                                        router.push({
-                                            pathname: '/catCamp/[catcampId]',
-                                            params: { catcampId: item.id },
-                                        })
-                                    }}
-                                    width={itemWidth * 0.9}
-                                    height={itemWidth * 0.8}
+                    <>
+                        <FlatList
+                            data={categories}
+                            key={`numColumns-3`}
+                            renderItem={({ item }) => (
+                                <View style={{ width: itemWidth, alignItems: 'center', marginBottom: verticalScale(10) }}>
+                                    <CategoryCard
+                                        id={item.id}
+                                        name={item.name}
+                                        icon={item.icon}
+                                        selectedId={0}
+                                        onSelect={() => {
+                                            router.push({
+                                                pathname: '/catCamp/[catcampId]',
+                                                params: { catcampId: item.id },
+                                            })
+                                        }}
+                                        width={itemWidth * 0.9}
+                                        height={itemWidth * 0.8}
+                                    />
+                                </View>
+                            )}
+                            keyExtractor={(item) => item.id.toString()}
+                            numColumns={3}
+                            columnWrapperStyle={{
+                                justifyContent: 'space-between',
+                                // marginBottom: verticalScale(10),
+                                paddingBottom: verticalScale(100),
+                            }}
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{
+                                paddingHorizontal: verticalScale(12),
+                                // marginBottom: verticalScale(10),
+                                paddingBottom: verticalScale(100),
+                            }}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={isRefreshing}
+                                    onRefresh={onRefresh}
+                                    colors={[theme.colors.primary]}
+                                    tintColor={theme.colors.primary}
                                 />
-                            </View>
-                        )}
-                        keyExtractor={(item) => item.id.toString()}
-                        numColumns={3}
-                        columnWrapperStyle={{
-                            justifyContent: 'space-between',
-                            // marginBottom: verticalScale(10),
-                            paddingBottom: verticalScale(100),
-                        }}
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{
-                            paddingHorizontal: verticalScale(12),
-                            // marginBottom: verticalScale(10),
-                            paddingBottom: verticalScale(100),
-                        }}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={isRefreshing}
-                                onRefresh={onRefresh}
-                                colors={[theme.colors.primary]}
-                                tintColor={theme.colors.primary}
-                            />
-                        }
-                        // inverted={isRTL}
-                        directionalLockEnabled={true}
-                        bounces={false}
-                        alwaysBounceVertical={false}
-                        scrollEventThrottle={16}
-                    />
+                            }
+                            // inverted={isRTL}
+                            directionalLockEnabled={true}
+                            bounces={false}
+                            alwaysBounceVertical={false}
+                            scrollEventThrottle={16}
+                        />
+                        {errorMessage ? (
+                            <Typo style={styles.errorText} size={15} fontWeight={'400'}>{errorMessage}</Typo>
+                        ) : null}
+                    </>
                 )}
             </View>
         </ScreenWrapper>
@@ -156,4 +166,11 @@ const category = () => {
 
 export default category
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    errorText: {
+        color: 'red',
+        marginTop: 0,
+        alignSelf: 'center',
+         paddingHorizontal: verticalScale(50)
+    },
+})
