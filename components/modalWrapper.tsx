@@ -2,9 +2,8 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
 import { spacingY } from '@/types/theme';
 import { ModalWrapperProps } from '@/types/types';
-import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 const isIOS = Platform.OS == 'ios'
 
@@ -15,16 +14,18 @@ const ModalWrapper = ({
 }: ModalWrapperProps) => {
 
   const { theme } = useTheme();
-  const finalColor = bg || theme.colors.black;
+  const finalColor = bg || theme.colors.background;
   const { language, isRTL } = useLanguage();
 
   return (
-    <LinearGradient
-      colors={[theme.colors.primary, theme.colors.black]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }} style={[styles.container, { backgroundColor: finalColor, direction: isRTL ? 'rtl' : 'ltr' }, style && style]}>
+    // <LinearGradient
+    //   colors={[theme.colors.primary, theme.colors.black]}
+    //   start={{ x: 0, y: 0 }}
+    //   end={{ x: 0, y: 1 }} style={[styles.container, { backgroundColor: finalColor, direction: isRTL ? 'rtl' : 'ltr' }, style && style]}>
+    <View style={[styles.container, { backgroundColor: finalColor }, style && style]}>
       {children}
-    </LinearGradient>
+    </View>
+    // </LinearGradient>
   )
 }
 

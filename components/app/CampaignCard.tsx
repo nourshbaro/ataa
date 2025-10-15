@@ -24,7 +24,6 @@ const CampaignCard = ({
     const { isRTL } = useLanguage();
     const [isFavorite, setIsFavorite] = useState(false);
 
-    // 🕓 Calculate days left
     const daysLeft = useMemo(() => {
         const today = new Date();
         const end = new Date(end_date);
@@ -98,17 +97,17 @@ const CampaignCard = ({
                 {/* Favorite Icon */}
                 <TouchableOpacity
                     onPress={() => setIsFavorite(!isFavorite)}
-                    style={[styles.iconButton, { backgroundColor: `${theme.colors.white}BF`, left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}
+                    style={[styles.iconButton, { backgroundColor: `${theme.colors.containerBackground}BF`, left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}
                 >
                     <Ionicons
                         name={isFavorite ? "heart" : "heart-outline"}
                         size={20}
-                        color={isFavorite ? "red" : theme.colors.text}
+                        color={isFavorite ? "red" : theme.colors.textSecondary}
                     />
                 </TouchableOpacity>
 
                 {/* Days Left */}
-                <View style={[styles.daysContainer, { backgroundColor: `${theme.colors.white}BF`, left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}>
+                <View style={[styles.daysContainer, { backgroundColor: `${theme.colors.containerBackground}BF`, left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}>
                     <Ionicons name="time-outline" size={14} color={theme.colors.text} />
                     <Typo style={styles.daysText} color={theme.colors.text} >
                         {daysLeft > 0 ? `${daysLeft} days left` : "Ended"}

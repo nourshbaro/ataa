@@ -9,12 +9,12 @@ import { StyleSheet } from 'react-native';
 
 const index = () => {
   const { t, toggleLanguage, language } = useLanguage();
-  const { toggleTheme, mode } = useTheme()
+  const { mode } = useTheme()
   return (
     <ScreenWrapper>
       <Typo>{t('welcome')}</Typo>
       <Typo>{t('home')}</Typo>
-      <Button onPress={()=>router.replace('/(tabs)')}>
+      <Button onPress={() => router.replace('/(tabs)')}>
         <Typo>
           {t('changeLanguage')}
         </Typo>

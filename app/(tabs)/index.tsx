@@ -237,20 +237,26 @@ const index = () => {
           catCampaign.length > 0 ? (
             <View style={{ alignItems: 'center', marginVertical: spacingY._10 }}>
               <Pressable
-                onPress={() => router.push(`/(tabs)/campaigns`)}
+                onPress={() => {
+                  router.push({
+                    pathname: '/catCamp/[catcampId]',
+                    params: { catcampId: selectedCategory },
+                  })
+                }}
                 style={{
-                  backgroundColor: theme.colors.primary,
-                  paddingVertical: 10,
+                  // backgroundColor: theme.colors.primary,
+                  // paddingVertical: 10,
                   paddingHorizontal: 20,
-                  borderRadius: 12,
-                  shadowColor: theme.colors.primary,
-                  shadowOpacity: 0.3,
-                  shadowRadius: 6,
-                  elevation: 4,
+                  // borderRadius: 12,
+                  // shadowColor: theme.colors.primary,
+                  // shadowOpacity: 0.3,
+                  // shadowRadius: 6,
+                  // elevation: 4,
                 }}
               >
-                <Typo color={theme.colors.white} style={{ fontWeight: 'bold' }}>
-                  See more from this category
+                <Typo color={theme.colors.textSecondary} style={{ fontSize: 15 }} fontWeight={'bold'}>
+                  Click here to view more
+                  {/* See more from this category */}
                 </Typo>
               </Pressable>
             </View>

@@ -8,6 +8,7 @@ import { useTheme } from '@/context/ThemeContext'
 import { Categories } from '@/types/types'
 import { verticalScale } from '@/utils/styling'
 import { Ionicons } from '@expo/vector-icons'
+import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { Dimensions, FlatList, RefreshControl, StyleSheet, View } from 'react-native'
 
@@ -50,7 +51,7 @@ const category = () => {
             setIsLoadingCategory(true);
 
             const categoryRes = await apiClient.get("/api/categories/all")
- 
+
             const categories = categoryRes.data.data;
             setCategories(categories)
         } catch (err: any) {
@@ -60,6 +61,11 @@ const category = () => {
         }
     };
 
+
+    // router.push({
+    //       pathname: '/catCamp/[catcampId]',
+    //       params: { id: selectedId },
+    //     });
     return (
         <ScreenWrapper>
             <Header rightIcon={<Ionicons
@@ -104,8 +110,13 @@ const category = () => {
                                     name={item.name}
                                     icon={item.icon}
                                     selectedId={0}
-                                    onSelect={() => { }}
-                                    width={itemWidth * 0.9} 
+                                    onSelect={() => {
+                                        router.push({
+                                            pathname: '/catCamp/[catcampId]',
+                                            params: { catcampId: item.id },
+                                        })
+                                    }}
+                                    width={itemWidth * 0.9}
                                     height={itemWidth * 0.8}
                                 />
                             </View>
@@ -113,7 +124,7 @@ const category = () => {
                         keyExtractor={(item) => item.id.toString()}
                         numColumns={3}
                         columnWrapperStyle={{
-                            justifyContent: 'space-between', 
+                            justifyContent: 'space-between',
                             // marginBottom: verticalScale(10),
                             paddingBottom: verticalScale(100),
                         }}
