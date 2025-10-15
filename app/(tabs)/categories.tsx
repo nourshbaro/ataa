@@ -131,8 +131,8 @@ const category = () => {
                             numColumns={3}
                             columnWrapperStyle={{
                                 justifyContent: 'space-between',
-                                // marginBottom: verticalScale(10),
-                                paddingBottom: verticalScale(100),
+                                marginBottom: verticalScale(10),
+                                // paddingBottom: verticalScale(100),
                             }}
                             showsVerticalScrollIndicator={false}
                             contentContainerStyle={{
