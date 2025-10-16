@@ -28,36 +28,6 @@ const register = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
 
-    const signup = async (email: string, firstName: string, lastName: string, username: string, password: string) => {
-        setError('');
-        setIsLoading(true);
-
-        try {
-            const response = await apiClient.post('/wp-json/wc/v3/customers', {
-                name,
-                email,
-                password
-            }, {
-                auth: {
-                    username: 'ck_7f60bf2097b37547e299e2d62427ddff36ee038d',
-                    password: 'cs_66194f1be2e6ad558e058f88ff54d47a5e12c5df',
-                }
-            });
-
-            Alert.alert(
-                "Verify Your Email",
-                "Registration successful! Please check your email inbox or spam for the activation link.",
-                [{ text: "OK", onPress: () => router.replace('/(auth)') }]
-            );
-        } catch (err: any) {
-            console.log("Error:", err.message);
-            const message = err?.response?.data?.message || err?.message || 'Something went wrong.';
-            setError(message);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     const stripHtml = (html: string) => {
         return html.replace(/<[^>]*>?/gm, '');
     };
