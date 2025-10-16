@@ -1,24 +1,27 @@
 import apiClient from '@/api/apiClient'
 import CampaignCard from '@/components/app/CampaignCard'
+import SkeletonCardCampaign from '@/components/app/SkeletonCardCampaign'
 import Header from '@/components/header'
 import Loading from '@/components/Loading'
 import ScreenWrapper from '@/components/ScreenWrapper'
-import Skeleton from '@/components/skeleton'
 import Typo from '@/components/Typo'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTheme } from '@/context/ThemeContext'
-import { spacingX, spacingY } from '@/types/theme'
+import { useAuth } from '@/context/UserContext'
+import { spacingY } from '@/types/theme'
 import { CampaignCardProps } from '@/types/types'
 import { verticalScale } from '@/utils/styling'
-import { Ionicons } from '@expo/vector-icons'
+import { Entypo } from '@expo/vector-icons'
+import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { Dimensions, FlatList, RefreshControl, StyleSheet, View } from 'react-native'
+import { Dimensions, FlatList, RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native'
 
 const { width: screenWidth } = Dimensions.get('window');
 
 const campaign = () => {
     const { theme } = useTheme();
     const { isRTL } = useLanguage();
+    const { isAuthenticated, logout } = useAuth()
 
     const [isLoadingCampaign, setIsLoadingCampaign] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -86,55 +89,54 @@ const campaign = () => {
 
     return (
         <ScreenWrapper>
-            <Header rightIcon={<Ionicons
-                name='person-circle-outline'
-                size={verticalScale(30)}
-                color={theme.colors.primary}
-            />} />
+            <Header
+                style={{ marginTop: verticalScale(10) }}
+                rightIcon={
+                    <TouchableOpacity
+                        onPress={() => {
+                            isAuthenticated ?
+                                logout() : router.push('/(auth)')
+                        }}
+                        style={[
+                            styles.loginButton,
+                            { borderColor: isAuthenticated ? theme.colors.error : theme.colors.textPrimary }
+                        ]}
+                    >
+                        {
+                            isAuthenticated ? (
+                                <>
+                                    <Entypo name="log-out" size={24} color={theme.colors.error} />
+                                    <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }} color={theme.colors.error}>
+                                        Logout
+                                    </Typo>
+                                </>
+                            ) : (
+                                <>
+                                    <Entypo name="login" size={24} color={theme.colors.textPrimary} />
+                                    <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }}>
+                                        Login
+                                    </Typo>
+                                </>
+                            )
+                        }
+                    </TouchableOpacity>
+                } />
             <View style={{ marginTop: verticalScale(10) }}>
                 {isLoadingCampaign ? (
-                    <View style={{ marginVertical: spacingY._5, alignItems: 'center', marginHorizontal: spacingX._20 }}>
-                        <View
-                            style={{
-                                backgroundColor: theme.colors.containerBackground,
-                                borderRadius: 16,
-                                paddingBottom: 10,
-                                width: screenWidth * 0.9,
-                                overflow: "hidden",
-                            }}
-                        >
-                            <Skeleton height={200} radius={16} />
-                            <Skeleton
-                                height={20}
-                                width={'50%'}
-                                radius={6}
-                                style={{ marginTop: 8, marginHorizontal: 10 }}
-                            />
-                            <Skeleton
-                                height={1}
-                                width={'87%'}
-                                radius={0}
-                                style={{ marginVertical: 8, marginHorizontal: 20, alignSelf: "center" }}
-                            />
-                            <Skeleton
-                                height={10}
-                                width={'90%'}
-                                radius={6}
-                                style={{ marginVertical: 8, marginHorizontal: 10, alignSelf: "center" }}
-                            />
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    justifyContent: "space-between",
-                                    marginHorizontal: 10,
-                                    marginTop: 8,
-                                }}
-                            >
-                                <Skeleton width="60%" height={16} radius={4} />
-                                <Skeleton width={40} height={16} radius={4} />
+                    <FlatList
+                        data={Array.from({ length: 3 })}
+                        renderItem={() => (
+                            <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
+                                <SkeletonCardCampaign width={screenWidth * 0.9} />
                             </View>
-                        </View>
-                    </View>
+                        )}
+                        keyExtractor={(_, index) => index.toString()}
+                        scrollEnabled={false}
+                    />
+                ) : errorMessage ? (
+                    <Typo style={styles.errorText} size={15} fontWeight={'400'}>{errorMessage}</Typo>
+                ) : campaigns.length === 0 ? (
+                    <Typo style={styles.notfound} size={15} fontWeight={'400'} color={theme.colors.textSecondary}>No campaigns found</Typo>
                 ) : (
                     <>
                         <FlatList
@@ -166,20 +168,18 @@ const campaign = () => {
                                     </View>
                                 ) : null
                             }
-                            onEndReached={() => {
-                                if (hasMore && !paginationLoading) {
-                                    setPage(prev => prev + 1);
-                                }
-                            }}
+                            // onEndReached={() => {
+                            //     if (hasMore && !paginationLoading) {
+                            //         setPage(prev => prev + 1);
+                            //     }
+                            // }}
+                            onEndReached={handleLoadMore}
                             // inverted={isRTL}
                             directionalLockEnabled={true}
                             bounces={false}
                             alwaysBounceVertical={false}
                             scrollEventThrottle={16}
                         />
-                        {errorMessage ? (
-                            <Typo style={styles.errorText} size={15} fontWeight={'400'}>{errorMessage}</Typo>
-                        ) : null}
                     </>
                 )}
             </View>
@@ -195,5 +195,19 @@ const styles = StyleSheet.create({
         marginTop: 0,
         alignSelf: 'center',
         paddingHorizontal: verticalScale(50)
+    },
+    notfound: {
+        marginTop: 0,
+        alignSelf: 'center',
+        paddingHorizontal: verticalScale(50)
+    },
+    loginButton: {
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
 })

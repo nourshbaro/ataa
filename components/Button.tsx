@@ -17,8 +17,7 @@ const Button = ({
 
     if (loading) {
         return (
-            <View style={[styles.button, style, { backgroundColor: 'black' }]}>
-                {/** loading */}
+            <View style={[styles.button, style, { backgroundColor: theme.colors.transparent }]}>
                 <Loading style={{ flex: 1 }} />
             </View>
         )

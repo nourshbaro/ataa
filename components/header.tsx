@@ -37,9 +37,7 @@ const Header = ({ rightIcon, leftIcon, style, logo, title }: HeaderProps) => {
       {/* Right Icon or Spacer */}
       {rightIcon ? (
         // <TouchableOpacity onPress={() => { isAuthenticated ? router.push('/(modals)/settings') : router.replace('/(auth)/login') }}>
-        <TouchableOpacity>
           <View style={styles.rightIcon}>{rightIcon}</View>
-        </TouchableOpacity>
       ) : (
         <View style={{ width: ICON_WIDTH }} />
       )}

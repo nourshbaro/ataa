@@ -14,7 +14,6 @@ const _layout = () => {
         <Tabs.Screen name="categories" />
         <Tabs.Screen name="campaigns" />
         <Tabs.Screen name="settings" />
-        {/* <Tabs.Screen name="contribute" /> */}
       </Tabs>
     </SafeAreaView>
   )

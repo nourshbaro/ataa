@@ -3,10 +3,11 @@ import ScreenWrapper from '@/components/ScreenWrapper'
 import Typo from '@/components/Typo'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTheme } from '@/context/ThemeContext'
+import { useAuth } from '@/context/UserContext'
 import { ThemeMode } from '@/types/theme'
 import { accountOptionType } from '@/types/types'
 import { verticalScale } from '@/utils/styling'
-import { Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { Entypo, Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native'
@@ -14,6 +15,7 @@ import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native'
 const settings = () => {
     const { theme, setThemeMode, mode } = useTheme()
     const { language, setLanguage, isRTL } = useLanguage()
+    const { isAuthenticated, logout } = useAuth()
     const [notifications, setNotifications] = useState(true);
 
     const accountOptions: accountOptionType[] = [
@@ -45,11 +47,38 @@ const settings = () => {
 
     return (
         <ScreenWrapper>
-            <Header rightIcon={<Ionicons
-                name='person-circle-outline'
-                size={verticalScale(30)}
-                color={theme.colors.primary}
-            />} />
+            <Header
+                style={{ marginTop: verticalScale(10) }}
+                rightIcon={
+                    <TouchableOpacity
+                        onPress={() => {
+                            isAuthenticated ?
+                                logout() : router.push('/(auth)')
+                        }}
+                        style={[
+                            styles.loginButton,
+                            { borderColor: isAuthenticated ? theme.colors.error : theme.colors.textPrimary }
+                        ]}
+                    >
+                        {
+                            isAuthenticated ? (
+                                <>
+                                    <Entypo name="log-out" size={24} color={theme.colors.error} />
+                                    <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }} color={theme.colors.error}>
+                                        Logout
+                                    </Typo>
+                                </>
+                            ) : (
+                                <>
+                                    <Entypo name="login" size={24} color={theme.colors.textPrimary} />
+                                    <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }}>
+                                        Login
+                                    </Typo>
+                                </>
+                            )
+                        }
+                    </TouchableOpacity>
+                } />
             <View style={[styles.container]}>
 
                 {/* THEME MODE */}
@@ -182,4 +211,13 @@ const styles = StyleSheet.create({
         // marginRight: 12,
     },
     optionText: { fontSize: 16, fontWeight: "500" },
+    loginButton: {
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
 })

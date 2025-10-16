@@ -2,25 +2,27 @@ import apiClient from '@/api/apiClient';
 import CampaignCard from '@/components/app/CampaignCard';
 import LatestCampaign from '@/components/app/LatestCampaign';
 import LatestCategories from '@/components/app/LatestCategories';
+import SkeletonCardCampaign from '@/components/app/SkeletonCardCampaign';
 import Header from '@/components/header';
 import ScreenWrapper from '@/components/ScreenWrapper';
-import Skeleton from '@/components/skeleton';
 import Typo from '@/components/Typo';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
-import { spacingX, spacingY } from '@/types/theme';
+import { useAuth } from '@/context/UserContext';
+import { spacingY } from '@/types/theme';
 import { Campaigns, Categories } from '@/types/types';
 import { verticalScale } from '@/utils/styling';
-import { Ionicons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+import { Dimensions, FlatList, Pressable, RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
 
 const index = () => {
   const { t, toggleLanguage, language, isRTL } = useLanguage();
   const { theme, mode } = useTheme()
+  const { isAuthenticated, logout } = useAuth()
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isLoadingLatestCampaign, setIsLoadingLatestCampaign] = useState(true);
   const [isLoadingLatestCategory, setIsLoadingLatestCategory] = useState(true);
@@ -122,58 +124,44 @@ const index = () => {
 
   return (
     <ScreenWrapper>
-      <Header rightIcon={<Ionicons
-        name='person-circle-outline'
-        size={verticalScale(30)}
-        color={theme.colors.primary}
-      />} />
+      <Header
+        style={{ marginTop: verticalScale(10) }}
+        rightIcon={
+          <TouchableOpacity
+            onPress={() => {
+              isAuthenticated ?
+                logout() : router.push('/(auth)')
+            }}
+            style={[
+              styles.loginButton,
+              { borderColor: isAuthenticated ? theme.colors.error : theme.colors.textPrimary }
+            ]}
+          >
+            {
+              isAuthenticated ? (
+                <>
+                  <Entypo name="log-out" size={24} color={theme.colors.error} />
+                  <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }} color={theme.colors.error}>
+                    Logout
+                  </Typo>
+                </>
+              ) : (
+                <>
+                  <Entypo name="login" size={24} color={theme.colors.textPrimary} />
+                  <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }}>
+                    Login
+                  </Typo>
+                </>
+              )
+            }
+          </TouchableOpacity>
+        } />
       <FlatList
         data={catCampaign}
         keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={
           !showEmpty ? (
-            <View style={{ marginVertical: spacingY._5, alignItems: 'center', marginHorizontal: spacingX._20 }}>
-              <View
-                style={{
-                  backgroundColor: theme.colors.containerBackground,
-                  borderRadius: 16,
-                  paddingBottom: 10,
-                  width: screenWidth * 0.9,
-                  overflow: "hidden",
-                }}
-              >
-                <Skeleton height={200} radius={16} />
-                <Skeleton
-                  height={20}
-                  width={'50%'}
-                  radius={6}
-                  style={{ marginTop: 8, marginHorizontal: 10 }}
-                />
-                <Skeleton
-                  height={1}
-                  width={'87%'}
-                  radius={0}
-                  style={{ marginVertical: 8, marginHorizontal: 20, alignSelf: "center" }}
-                />
-                <Skeleton
-                  height={10}
-                  width={'90%'}
-                  radius={6}
-                  style={{ marginVertical: 8, marginHorizontal: 10, alignSelf: "center" }}
-                />
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginHorizontal: 10,
-                    marginTop: 8,
-                  }}
-                >
-                  <Skeleton width="60%" height={16} radius={4} />
-                  <Skeleton width={40} height={16} radius={4} />
-                </View>
-              </View>
-            </View>
+            <SkeletonCardCampaign width={screenWidth * 0.9} />
           ) : errorMessage ? (
             <Typo style={styles.errorText} size={15} fontWeight={'400'}>{errorMessage}</Typo>
           ) : (
@@ -313,5 +301,13 @@ const styles = StyleSheet.create({
     marginTop: 0,
     alignSelf: 'center',
     paddingHorizontal: verticalScale(50)
+  },
+  loginButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
 })

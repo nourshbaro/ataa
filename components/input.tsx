@@ -17,15 +17,15 @@ const Input = (props: InputProps) => {
             style={[
                 styles.container,
                 props.containerStyle,
-                { borderColor: theme.colors.white, flexDirection: 'row' }
+                { borderColor: theme.colors.text, flexDirection: 'row' }
             ]}
         >
             {props.icon && <View style={styles.iconWrapper}>{props.icon}</View>}
 
             <View style={styles.inputWrapper}>
                 <TextInput
-                    style={[styles.input, { color: theme.colors.white }, props.inputStyle]}
-                    placeholderTextColor={theme.colors.white}
+                    style={[styles.input, { color: theme.colors.textSecondary }, props.inputStyle]}
+                    placeholderTextColor={theme.colors.textSecondary}
                     ref={props.inputRef}
                     {...props}
                 />

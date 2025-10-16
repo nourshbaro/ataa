@@ -1,13 +1,13 @@
 import apiClient from '@/api/apiClient'
 import CampaignCard from '@/components/app/CampaignCard'
+import SkeletonCardCampaign from '@/components/app/SkeletonCardCampaign'
 import BackButton from '@/components/backButton'
 import Header from '@/components/header'
 import Loading from '@/components/Loading'
 import ModalWrapper from '@/components/modalWrapper'
-import Skeleton from '@/components/skeleton'
 import Typo from '@/components/Typo'
 import { useTheme } from '@/context/ThemeContext'
-import { spacingX, spacingY } from '@/types/theme'
+import { spacingY } from '@/types/theme'
 import { verticalScale } from '@/utils/styling'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
@@ -31,9 +31,9 @@ const CategoryCampaign = () => {
         if (catcampId) fetchData(1);
     }, [catcampId]);
 
-    useEffect(() => {
-        if (page > 1 && catcampId) fetchData(page);
-    }, [page]);
+    // useEffect(() => {
+    //     if (page > 1 && catcampId) fetchData(page);
+    // }, [page]);
 
     const onRefresh = async () => {
         setIsRefreshing(true);
@@ -45,6 +45,14 @@ const CategoryCampaign = () => {
         } finally {
             setIsRefreshing(false);
         }
+    };
+
+    const handleLoadMore = () => {
+        if (!hasMore || paginationLoading || isLoadingCampaign) return;
+        setPaginationLoading(true);
+        const nextPage = page + 1;
+        fetchData(nextPage);
+        setPage(nextPage);
     };
 
     const fetchData = async (pageNumber = 1) => {
@@ -72,13 +80,6 @@ const CategoryCampaign = () => {
         }
     };
 
-    // const shareNews = () => {
-    //     Share.share({
-    //         message: `Check out on Digital Star News: \n${post?.title?.rendered || 'Digital Star News Post'}\n\n${post?.link}`,
-    //         title: post?.title?.rendered || 'DStar News Post',
-    //     })
-    // }
-
     return (
         <ModalWrapper>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -87,44 +88,23 @@ const CategoryCampaign = () => {
                     leftIcon={<BackButton />}
                     style={{ marginBottom: spacingY._10, flex: 1 }}
                 />
-                {/* <TouchableOpacity onPress={() => { }} style={{
-                    backgroundColor: theme.colors.disabled, alignSelf: 'flex-start',
-                    borderRadius: radius._12,
-                    borderCurve: 'continuous',
-                    padding: 5
-                }}>
-                    <MaterialIcons
-                        name='share'
-                        size={verticalScale(26)}
-                        color={theme.colors.white}
-                        weight='bold'
-                    />
-                </TouchableOpacity> */}
             </View>
             <View style={{ marginTop: verticalScale(10) }}>
                 {isLoadingCampaign ? (
-                    <View style={{ marginVertical: spacingY._5, alignItems: 'center', marginHorizontal: spacingX._20 }}>
-                        <View
-                            style={{
-                                backgroundColor: theme.colors.containerBackground,
-                                borderRadius: 16,
-                                paddingBottom: 10,
-                                width: screenWidth * 0.9,
-                                overflow: "hidden",
-                            }}
-                        >
-                            <Skeleton height={200} radius={16} />
-                            <Skeleton height={20} width={'50%'} radius={6} style={{ marginTop: 8, marginHorizontal: 10 }} />
-                            <Skeleton height={1} width={'87%'} radius={0} style={{ marginVertical: 8, marginHorizontal: 20, alignSelf: "center" }} />
-                            <Skeleton height={10} width={'90%'} radius={6} style={{ marginVertical: 8, marginHorizontal: 10, alignSelf: "center" }} />
-                            <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 10, marginTop: 8 }}>
-                                <Skeleton width="60%" height={16} radius={4} />
-                                <Skeleton width={40} height={16} radius={4} />
+                    <FlatList
+                        data={Array.from({ length: 3 })}
+                        renderItem={() => (
+                            <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
+                                <SkeletonCardCampaign width={screenWidth * 0.9} />
                             </View>
-                        </View>
-                    </View>
+                        )}
+                        keyExtractor={(_, index) => index.toString()}
+                        scrollEnabled={false}
+                    />
                 ) : errorMessage ? (
                     <Typo style={styles.errorText} size={15} fontWeight={'400'}>{errorMessage}</Typo>
+                ) : campaigns.length === 0 ? (
+                    <Typo style={styles.notfound} size={15} fontWeight={'400'} color={theme.colors.textSecondary}>No campaigns found</Typo>
                 ) : (
                     <>
                         <FlatList
@@ -156,9 +136,10 @@ const CategoryCampaign = () => {
                                     </View>
                                 ) : null
                             }
-                            onEndReached={() => {
-                                if (hasMore && !paginationLoading) setPage(prev => prev + 1);
-                            }}
+                            // onEndReached={() => {
+                            //     if (hasMore && !paginationLoading) setPage(prev => prev + 1);
+                            // }}
+                            onEndReached={handleLoadMore}
                             onEndReachedThreshold={0.5}
                             bounces={false}
                             scrollEventThrottle={16}
@@ -179,4 +160,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         paddingHorizontal: verticalScale(50)
     },
+    notfound: {
+        marginTop: 0,
+        alignSelf: 'center',
+        paddingHorizontal: verticalScale(50)
+    }
 });

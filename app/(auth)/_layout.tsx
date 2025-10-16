@@ -5,8 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function AuthLayout() {
   const { theme } = useTheme()
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.transparent }}>
-      <Stack screenOptions={{ headerShown: false }} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <Stack screenOptions={{ presentation: 'modal', headerShown: false }} />
     </SafeAreaView>
   )
 }
