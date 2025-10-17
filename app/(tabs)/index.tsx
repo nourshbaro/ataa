@@ -9,13 +9,13 @@ import Typo from '@/components/Typo';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/UserContext';
-import { spacingY } from '@/types/theme';
+import { radius, spacingX, spacingY } from '@/types/theme';
 import { Campaigns, Categories } from '@/types/types';
 import { verticalScale } from '@/utils/styling';
-import { Entypo } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Pressable, RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Image, Pressable, RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -27,6 +27,7 @@ const index = () => {
   const [isLoadingLatestCampaign, setIsLoadingLatestCampaign] = useState(true);
   const [isLoadingLatestCategory, setIsLoadingLatestCategory] = useState(true);
   const [isLoadingCatCampaign, setIsLoadingCatCampaign] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [latestCampaign, setLatestCampaign] = useState<Campaigns[]>([]);
   const [latestCategories, setLatestCategories] = useState<Categories[]>([]);
   const [catCampaign, setCatCampaign] = useState<any[]>([]);
@@ -126,37 +127,72 @@ const index = () => {
     <ScreenWrapper>
       <Header
         style={{ marginTop: verticalScale(10) }}
+        leftIcon={
+          <View style={{ flexDirection: 'row', alignContent: 'center' }}>
+            <Image source={require('../../assets/images/transparent.png')} style={styles.image} resizeMode="cover" />
+            <View style={{ marginHorizontal: spacingX._10 }}>
+              <Typo size={16} fontWeight={'bold'}>Welcome</Typo>
+              <Typo color={theme.colors.textSecondary}>User</Typo>
+            </View>
+          </View>
+        }
         rightIcon={
           <TouchableOpacity
-            onPress={() => {
-              isAuthenticated ?
-                logout() : router.push('/(auth)')
-            }}
-            style={[
-              styles.loginButton,
-              { borderColor: isAuthenticated ? theme.colors.error : theme.colors.textPrimary }
-            ]}
+            onPress={() => { }}
+            style={[styles.iconButton, { left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}
           >
-            {
-              isAuthenticated ? (
-                <>
-                  <Entypo name="log-out" size={24} color={theme.colors.error} />
-                  <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }} color={theme.colors.error}>
-                    Logout
-                  </Typo>
-                </>
-              ) : (
-                <>
-                  <Entypo name="login" size={24} color={theme.colors.textPrimary} />
-                  <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }}>
-                    Login
-                  </Typo>
-                </>
-              )
-            }
+            <Ionicons
+              name={"heart-outline"}
+              size={30}
+              color={theme.colors.textSecondary}
+            />
           </TouchableOpacity>
-        } />
-      <FlatList
+        }
+      // rightIcon={
+      //   <Button
+      //     onPress={async () => {
+      //       if (isAuthenticated) {
+      //         setIsLoading(true);
+      //         try {
+      //           await logout();
+      //         } finally {
+      //           setIsLoading(false);
+      //         }
+      //       } else {
+      //         router.push('/(auth)');
+      //       }
+      //     }}
+      //     style={[
+      //       styles.loginButton,
+      //       {
+      //         borderColor: isAuthenticated ? theme.colors.error : theme.colors.textPrimary,
+      //         backgroundColor: theme.colors.transparent
+      //       }
+      //     ]}
+      //     loading={isLoading}
+      //     disabled={isLoading}
+      //   >
+      //     {
+      //       isAuthenticated ? (
+      //         <>
+      //           <Entypo name="log-out" size={24} color={theme.colors.error} />
+      //           <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }} color={theme.colors.error}>
+      //             Logout
+      //           </Typo>
+      //         </>
+      //       ) : (
+      //         <>
+      //           <Entypo name="login" size={24} color={theme.colors.textPrimary} />
+      //           <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }}>
+      //             Login
+      //           </Typo>
+      //         </>
+      //       )
+      //     }
+      //   </Button>
+      // } 
+      />
+      < FlatList
         data={catCampaign}
         keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={
@@ -164,6 +200,8 @@ const index = () => {
             <SkeletonCardCampaign width={screenWidth * 0.9} />
           ) : errorMessage ? (
             <Typo style={styles.errorText} size={15} fontWeight={'400'}>{errorMessage}</Typo>
+          ) : catCampaign.length === 0 ? (
+            <Typo style={styles.notfound} size={15} fontWeight={'400'} color={theme.colors.textSecondary}>No campaigns found</Typo>
           ) : (
             <View style={{ marginTop: spacingY._15 }}>
               <Typo size={15} color={theme.colors.textSecondary} style={{ textAlign: 'center' }}>
@@ -178,34 +216,35 @@ const index = () => {
             <CampaignCard {...item} cardWidth={screenWidth * 0.9} />
           </View>
         )}
-        ListHeaderComponent={errorMessage ? (
-          null
-        ) : (
-          <>
-            <View style={styles.titleHeader}>
-              <Typo style={styles.mainTitle} color={theme.colors.textPrimary}>Latest Campaigns</Typo>
-              <Pressable onPress={() => { router.push('/(tabs)/campaigns') }}>
-                <Typo style={styles.seeAll} color={theme.colors.textSecondary}>More</Typo>
-              </Pressable>
-            </View>
+        ListHeaderComponent={
+          errorMessage ? (
+            null
+          ) : (
+            <>
+              <View style={styles.titleHeader} >
+                <Typo style={styles.mainTitle} color={theme.colors.textPrimary}>Latest Campaigns</Typo>
+                <Pressable onPress={() => { router.push('/(tabs)/campaigns') }}>
+                  <Typo style={styles.seeAll} color={theme.colors.textSecondary}>More</Typo>
+                </Pressable>
+              </View >
 
-            <LatestCampaign
-              data={latestCampaign}
-              // isRefreshing={isRefreshing}
-              // onRefresh={onRefresh}
-              isLoading={isLoadingLatestCampaign}
-            />
+              <LatestCampaign
+                data={latestCampaign}
+                // isRefreshing={isRefreshing}
+                // onRefresh={onRefresh}
+                isLoading={isLoadingLatestCampaign}
+              />
 
-            <LatestCategories
-              categories={latestCategories}
-              selectedId={selectedCategory}
-              onSelect={handleCategorySelect}
-              // isRefreshing={isRefreshing}
-              // onRefresh={onRefresh}
-              isLoading={isLoadingLatestCategory}
-            />
-          </>
-        )
+              <LatestCategories
+                categories={latestCategories}
+                selectedId={selectedCategory}
+                onSelect={handleCategorySelect}
+                // isRefreshing={isRefreshing}
+                // onRefresh={onRefresh}
+                isLoading={isLoadingLatestCategory}
+              />
+            </>
+          )
         }
         // ListFooterComponent={
         //   paginationLoading && hasMore ? (
@@ -309,5 +348,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  notfound: {
+    marginTop: 0,
+    alignSelf: 'center',
+    paddingHorizontal: verticalScale(50)
+  },
+  image: {
+    width: verticalScale(50),
+    backgroundColor: 'red',
+    height: verticalScale(50),
+    borderRadius: radius._30
+  },
+  iconButton: {
+    // position: "absolute",
+    // top: 10,
+    borderRadius: 50,
+    padding: 6,
   },
 })

@@ -110,38 +110,38 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const logout = async () => {
-        Alert.alert(
-            'Confirm Logout',
-            'Are you sure you want to log out?',
-            [
-                {
-                    text: 'Cancel',
-                    style: 'cancel',
-                },
-                {
-                    text: 'Logout',
-                    onPress: async () => {
-                        if (accessToken) {
-                            try {
-                                await apiClient.post("/api/donor/logout", {}, {
-                                    headers: { Authorization: `Bearer ${accessToken}` },
-                                });
-                            } catch (error) {
-                                console.error('Logout API call failed', error);
-                            }
-                        }
+    Alert.alert(
+      'Confirm Logout',
+      'Are you sure you want to log out?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          onPress: async () => {
+            if (accessToken) {
+              try {
+                await apiClient.post("/api/donor/logout", {}, {
+                  headers: { Authorization: `Bearer ${accessToken}` },
+                });
 
-                        await SecureStore.deleteItemAsync('accessToken');
-                        await SecureStore.deleteItemAsync('refreshToken');
-                        await AsyncStorage.removeItem('expires_in');
-                        setAccessToken(null);
-                        setRefreshToken(null);
-                    },
-                },
-            ],
-            { cancelable: false }
-        );
-    };
+                await SecureStore.deleteItemAsync('accessToken');
+                await SecureStore.deleteItemAsync('refreshToken');
+                await AsyncStorage.removeItem('expires_in');
+                setAccessToken(null);
+                setRefreshToken(null);
+              } catch (error) {
+                console.error('Logout API call failed', error);
+              }
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   const isAuthenticated = useMemo(() => {
     return !!accessToken && !isTokenExpired(accessToken);

@@ -7,10 +7,10 @@ export const styles = StyleSheet.create({
         overflow: "hidden",
         // marginBottom: 20,
         paddingBottom: 10,
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.3,
-        shadowRadius: 6,
-        elevation: 8,
+        // shadowOffset: { width: 0, height: 5 },
+        // shadowOpacity: 0.3,
+        // shadowRadius: 6,
+        // elevation: 5,
         marginHorizontal: spacingX._20,
     },
     imageWrapper: {
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 8 },
         shadowOpacity: 0.4,
         shadowRadius: 8,
-        elevation: 15,
+        elevation: 6,
     },
     image: {
         width: "100%",

@@ -8,13 +8,13 @@ import Typo from '@/components/Typo'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTheme } from '@/context/ThemeContext'
 import { useAuth } from '@/context/UserContext'
-import { spacingY } from '@/types/theme'
+import { radius, spacingX, spacingY } from '@/types/theme'
 import { CampaignCardProps } from '@/types/types'
 import { verticalScale } from '@/utils/styling'
-import { Entypo } from '@expo/vector-icons'
+import { Entypo, Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { Dimensions, FlatList, RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Dimensions, FlatList, Image, RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native'
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -91,36 +91,71 @@ const campaign = () => {
         <ScreenWrapper>
             <Header
                 style={{ marginTop: verticalScale(10) }}
+                leftIcon={
+                    <View style={{ flexDirection: 'row', alignContent: 'center' }}>
+                        <Image source={require('../../assets/images/transparent.png')} style={styles.image} resizeMode="cover" />
+                        <View style={{ marginHorizontal: spacingX._10 }}>
+                            <Typo size={16} fontWeight={'bold'}>Welcome</Typo>
+                            <Typo color={theme.colors.textSecondary}>User</Typo>
+                        </View>
+                    </View>
+                }
                 rightIcon={
                     <TouchableOpacity
-                        onPress={() => {
-                            isAuthenticated ?
-                                logout() : router.push('/(auth)')
-                        }}
-                        style={[
-                            styles.loginButton,
-                            { borderColor: isAuthenticated ? theme.colors.error : theme.colors.textPrimary }
-                        ]}
+                        onPress={() => { }}
+                        style={[styles.iconButton, { left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}
                     >
-                        {
-                            isAuthenticated ? (
-                                <>
-                                    <Entypo name="log-out" size={24} color={theme.colors.error} />
-                                    <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }} color={theme.colors.error}>
-                                        Logout
-                                    </Typo>
-                                </>
-                            ) : (
-                                <>
-                                    <Entypo name="login" size={24} color={theme.colors.textPrimary} />
-                                    <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }}>
-                                        Login
-                                    </Typo>
-                                </>
-                            )
-                        }
+                        <Ionicons
+                            name={"heart-outline"}
+                            size={30}
+                            color={theme.colors.textSecondary}
+                        />
                     </TouchableOpacity>
-                } />
+                }
+            // rightIcon={
+            //   <Button
+            //     onPress={async () => {
+            //       if (isAuthenticated) {
+            //         setIsLoading(true);
+            //         try {
+            //           await logout();
+            //         } finally {
+            //           setIsLoading(false);
+            //         }
+            //       } else {
+            //         router.push('/(auth)');
+            //       }
+            //     }}
+            //     style={[
+            //       styles.loginButton,
+            //       {
+            //         borderColor: isAuthenticated ? theme.colors.error : theme.colors.textPrimary,
+            //         backgroundColor: theme.colors.transparent
+            //       }
+            //     ]}
+            //     loading={isLoading}
+            //     disabled={isLoading}
+            //   >
+            //     {
+            //       isAuthenticated ? (
+            //         <>
+            //           <Entypo name="log-out" size={24} color={theme.colors.error} />
+            //           <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }} color={theme.colors.error}>
+            //             Logout
+            //           </Typo>
+            //         </>
+            //       ) : (
+            //         <>
+            //           <Entypo name="login" size={24} color={theme.colors.textPrimary} />
+            //           <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }}>
+            //             Login
+            //           </Typo>
+            //         </>
+            //       )
+            //     }
+            //   </Button>
+            // } 
+            />
             <View style={{ marginTop: verticalScale(10) }}>
                 {isLoadingCampaign ? (
                     <FlatList
@@ -209,5 +244,17 @@ const styles = StyleSheet.create({
         borderColor: "#ccc",
         flexDirection: 'row',
         justifyContent: 'space-between'
+    },
+    image: {
+        width: verticalScale(50),
+        backgroundColor: 'red',
+        height: verticalScale(50),
+        borderRadius: radius._30
+    },
+    iconButton: {
+        // position: "absolute",
+        // top: 10,
+        borderRadius: 50,
+        padding: 6,
     },
 })

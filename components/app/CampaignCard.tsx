@@ -85,7 +85,7 @@ const CampaignCard = ({
                 styles.card,
                 {
                     backgroundColor: theme.colors.containerBackground,
-                    shadowColor: theme.colors.primary,
+                    shadowColor: theme.colors.textPrimary,
                     width: cardWidth,
                 },
             ]}
@@ -97,7 +97,7 @@ const CampaignCard = ({
             }}
         >
             {/* Image Section */}
-            <View style={[styles.imageWrapper, { shadowColor: theme.colors.primary, }]}>
+            <View style={[styles.imageWrapper, { shadowColor: theme.colors.text, }]}>
                 <Image source={featured_image ? { uri: featured_image } : require('../../assets/images/transparent.png')} style={styles.image} resizeMode="cover" />
 
                 {/* Favorite Icon */}

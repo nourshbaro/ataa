@@ -7,12 +7,13 @@ import ModalWrapper from '@/components/modalWrapper';
 import Typo from '@/components/Typo';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
+import { useAuth } from '@/context/UserContext';
 import { spacingY } from '@/types/theme';
 import { Campaigns } from '@/types/types';
 import { verticalScale } from '@/utils/styling';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
     Dimensions,
@@ -30,6 +31,7 @@ const Single = () => {
     const { id } = useLocalSearchParams();
     const { theme } = useTheme();
     const { isRTL } = useLanguage();
+    const { isAuthenticated } = useAuth()
 
     const [campaign, setCampaign] = useState<Campaigns>();
     const [isLoading, setIsLoading] = useState(true);
@@ -52,6 +54,17 @@ const Single = () => {
             setErrorMessage(message);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleClick = () => {
+        if (isAuthenticated) {
+            router.push({
+                pathname: '/payment/[paymentId]',
+                params: { paymentId: campaign?.id || 0 },
+            });
+        } else {
+            router.push('/(auth)')
         }
     };
 
@@ -100,31 +113,28 @@ const Single = () => {
     return (
         <ModalWrapper>
             {/* Header Image */}
+
             <View style={styles.imageContainer}>
-                {/* Image */}
                 <Image
                     source={{ uri: campaign.featured_image }}
                     style={styles.image}
                     resizeMode="cover"
                 />
 
-                {/* Overlay with gradient */}
                 <LinearGradient
                     colors={['rgba(0,0,0,0.4)', 'transparent', 'rgba(0,0,0,0.3)']}
                     style={StyleSheet.absoluteFillObject}
                 />
 
-                {/* Header Content */}
-
+                {/* Header over image */}
+                <View style={styles.headerOverlay}>
+                    <Header
+                        title=""
+                        leftIcon={<BackButton />}
+                        style={{ marginBottom: spacingY._10 }}
+                    />
+                </View>
             </View>
-            <View style={styles.headerContent}>
-                <Header
-                    title=""
-                    leftIcon={<BackButton />}
-                    style={{ marginBottom: spacingY._10 }}
-                />
-            </View>
-
             {/* Content */}
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -194,17 +204,18 @@ const Single = () => {
                     {campaign.description || 'No description available.'}
                 </Typo>
 
-                {/* Donate Button */}
-                <View style={{ marginVertical: 25 }}>
-                    <Button
-                        style={{ width: '100%', paddingVertical: 12, borderRadius: 10 }}
-                    >
-                        <Typo style={{ textAlign: 'center', fontWeight: 'bold' }} color={theme.colors.white}>
-                            Donate Now
-                        </Typo>
-                    </Button>
-                </View>
             </ScrollView>
+            {/* Donate Button */}
+            <View style={{ marginHorizontal: 25 }}>
+                <Button
+                    style={{ width: '100%', paddingVertical: 12, borderRadius: 10 }}
+                    onPress={handleClick}
+                >
+                    <Typo style={{ textAlign: 'center', fontWeight: 'bold' }} color={theme.colors.white}>
+                        Donate Now
+                    </Typo>
+                </Button>
+            </View>
         </ModalWrapper>
     );
 };
@@ -215,21 +226,35 @@ const styles = StyleSheet.create({
     imageContainer: {
         width: '95%',
         // height: screenWidth * 0.55,
-        aspectRatio: 1.8, // keeps dynamic height relative to width (~40% of screen)
+        aspectRatio: 1.8,
         borderRadius: 16,
         overflow: 'hidden',
         marginBottom: spacingY._15,
         alignSelf: 'center',
+        position: 'relative',
+    },
+    // imageContainer: {
+    //   height: 250, // or whatever height you need
+    //   position: 'relative',
+    //   overflow: 'hidden',
+    // },
+    headerOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        paddingTop: spacingY._15,
+        // paddingHorizontal: spacingY._15,
+        zIndex: 10,
     },
     image: {
         width: '100%',
         height: '100%',
     },
     headerContent: {
-        ...StyleSheet.absoluteFillObject,
+        // ...StyleSheet.absoluteFillObject,
         paddingHorizontal: spacingY._10,
-        paddingTop: spacingY._60,
-        justifyContent: 'flex-start',
+        // paddingTop: spacingY._60,
     },
     titleRow: {
         flexDirection: 'row',

@@ -7,7 +7,7 @@ const Loading = ({
     color,
 }: ActivityIndicatorProps) => {
     const { theme } = useTheme();
-    const finalColor = color || theme.colors.secondary;
+    const finalColor = color || theme.colors.primary;
     return (
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size={size} color={finalColor} />

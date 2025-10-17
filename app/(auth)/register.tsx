@@ -8,14 +8,14 @@ import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/UserContext';
-import { spacingY } from '@/types/theme';
+import { radius, spacingY } from '@/types/theme';
 import { verticalScale } from '@/utils/styling';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import React, { useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { styles } from '../../styles/authform.styles';
 
 const register = () => {
@@ -91,49 +91,53 @@ const register = () => {
 
                         <View style={[styles.form]}>
 
-                            <Input
-                                placeholder='Full Name'
-                                onChangeText={setName}
-                                editable={!isLoading}
-                                style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
-                                icon={<MaterialIcons
-                                    name='person'
-                                    size={verticalScale(26)}
-                                    color={theme.colors.textSecondary}
-                                    weight='fill'
+                            <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
+                                <Input
+                                    placeholder='Full Name'
+                                    onChangeText={setName}
+                                    editable={!isLoading}
+                                    style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
+                                    icon={<MaterialIcons
+                                        name='person'
+                                        size={verticalScale(26)}
+                                        color={theme.colors.textSecondary}
+                                        weight='fill'
+                                    />
+                                    }
                                 />
-                                }
-                            />
-
+                            </View>
                             {/** input */}
-                            <Input
-                                placeholder='Email Address'
-                                onChangeText={setEmail}
-                                editable={!isLoading}
-                                style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
-                                icon={<MaterialIcons
-                                    name='email'
-                                    size={verticalScale(26)}
-                                    color={theme.colors.textSecondary}
-                                    weight='fill'
+                            <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
+                                <Input
+                                    placeholder='Email Address'
+                                    onChangeText={setEmail}
+                                    editable={!isLoading}
+                                    style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
+                                    icon={<MaterialIcons
+                                        name='email'
+                                        size={verticalScale(26)}
+                                        color={theme.colors.textSecondary}
+                                        weight='fill'
+                                    />
+                                    }
                                 />
-                                }
-                            />
-                            <Input
-                                placeholder='Password'
-                                secureTextEntry
-                                onChangeText={setPassword}
-                                editable={!isLoading}
-                                style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
-                                icon={<MaterialIcons
-                                    name='lock'
-                                    size={verticalScale(26)}
-                                    color={theme.colors.textSecondary}
-                                    weight='fill'
+                            </View>
+                            <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
+                                <Input
+                                    placeholder='Password'
+                                    secureTextEntry
+                                    onChangeText={setPassword}
+                                    editable={!isLoading}
+                                    style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
+                                    icon={<MaterialIcons
+                                        name='lock'
+                                        size={verticalScale(26)}
+                                        color={theme.colors.textSecondary}
+                                        weight='fill'
+                                    />
+                                    }
                                 />
-                                }
-                            />
-
+                            </View>
                             {error ? <Typo style={styles.errorText}>{stripHtml(error)}</Typo> : null}
 
                         </View>

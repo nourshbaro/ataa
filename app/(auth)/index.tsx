@@ -8,7 +8,7 @@ import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/UserContext';
-import { spacingY } from '@/types/theme';
+import { radius, spacingY } from '@/types/theme';
 import { verticalScale } from '@/utils/styling';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,8 +28,8 @@ const login = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
     const { setAccessToken } = useAuth();
-    const [cooldown, setCooldown] = useState(0); 
-    const cooldownSeconds = 60;       
+    const [cooldown, setCooldown] = useState(0);
+    const cooldownSeconds = 60;
 
     const canSubmit = cooldown === 0;
 
@@ -55,13 +55,15 @@ const login = () => {
             const accessToken = data.access_token.access_token;
             const refreshToken = data.refresh_token;
             const expiresIn = data.access_token.expires_in;
-
+            console.log('done');
             await SecureStore.setItemAsync('accessToken', accessToken);
             await SecureStore.setItemAsync('refreshToken', refreshToken);
             await AsyncStorage.setItem('expires_in', JSON.stringify(expiresIn));
-
+            console.log('done');
             setAccessToken(accessToken);
+            console.log('done');
             router.replace('/(tabs)')
+            console.log('done');
 
         } catch (error) {
             console.error('Login failed', error);
@@ -104,33 +106,37 @@ const login = () => {
 
                     <View style={[styles.form]}>
 
-                        <Input
-                            placeholder='Email Address'
-                            onChangeText={setUsername}
-                            editable={!isLoading}
-                            style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
-                            icon={<MaterialIcons
-                                name='email'
-                                size={verticalScale(26)}
-                                color={theme.colors.textSecondary}
-                                weight='fill'
+                        <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
+                            <Input
+                                placeholder='Email Address'
+                                onChangeText={setUsername}
+                                editable={!isLoading}
+                                style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
+                                icon={<MaterialIcons
+                                    name='email'
+                                    size={verticalScale(26)}
+                                    color={theme.colors.textSecondary}
+                                    weight='fill'
+                                />
+                                }
                             />
-                            }
-                        />
-                        <Input
-                            placeholder='Password'
-                            secureTextEntry
-                            onChangeText={setPassword}
-                            editable={!isLoading}
-                            style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
-                            icon={<MaterialIcons
-                                name='lock'
-                                size={verticalScale(26)}
-                                color={theme.colors.textSecondary}
-                                weight='fill'
+                        </View>
+                        <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
+                            <Input
+                                placeholder='Password'
+                                secureTextEntry
+                                onChangeText={setPassword}
+                                editable={!isLoading}
+                                style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
+                                icon={<MaterialIcons
+                                    name='lock'
+                                    size={verticalScale(26)}
+                                    color={theme.colors.textSecondary}
+                                    weight='fill'
+                                />
+                                }
                             />
-                            }
-                        />
+                        </View>
 
                         {
                             error ? <Typo style={styles.errorText} size={15} fontWeight={'400'}>{error}</Typo> : null

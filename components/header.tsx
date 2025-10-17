@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom: spacingX._20,
+    marginBottom: spacingX._10,
   },
   leftIcon: {
     paddingHorizontal: spacingX._12,

@@ -7,7 +7,7 @@ export const lightTheme: AppTheme = {
         secondary: "#D288EB",        // Lavender purple — secondary highlight
         white: "#FFFFFF",
         black: "#000000",
-        inputBackground: "#F4F6F8",
+        inputBackground: "#e9e9e9ff",
         transparent: "transparent",
         tabBackground: "#F7F8FA",
         containerBackground: "#FFFFFF",
@@ -15,7 +15,7 @@ export const lightTheme: AppTheme = {
         skeletonHighlight: "#F5F7FA",
 
         accent: "#08557C",           
-        background: "#F7F8FA",      
+        background: "#f3f3f3ff",      
         surface: "#FFFFFF",          
 
         textPrimary: "#1A1A1A",

@@ -7,7 +7,7 @@ import { Dimensions, Platform, StyleSheet, View } from 'react-native';
 const { height } = Dimensions.get('window');
 
 const ScreenWrapper = ({ style, children }: ScreenWrapperProps) => {
-  const paddingTop = Platform.OS === 'ios' ? height * 0.01 : height * 0.02;
+  const paddingTop = Platform.OS === 'ios' ? height * 0.01 : height * 0.01;
   const { theme } = useTheme();
   const { language, isRTL } = useLanguage();
 

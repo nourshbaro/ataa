@@ -4,13 +4,13 @@ import Typo from '@/components/Typo'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTheme } from '@/context/ThemeContext'
 import { useAuth } from '@/context/UserContext'
-import { ThemeMode } from '@/types/theme'
+import { radius, spacingX, ThemeMode } from '@/types/theme'
 import { accountOptionType } from '@/types/types'
 import { verticalScale } from '@/utils/styling'
-import { Entypo, Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 
 const settings = () => {
     const { theme, setThemeMode, mode } = useTheme()
@@ -20,10 +20,10 @@ const settings = () => {
 
     const accountOptions: accountOptionType[] = [
         {
-            title: "Account",
+            title: isAuthenticated ? "Account" : 'Login',
             icon: <Ionicons name="person-outline" size={22} color="#fff" />,
             bgColor: "#4A90E2",
-            // routeName: "/account",
+            routeName: isAuthenticated ? "/(tabs)" : '/(auth)',
         },
         {
             title: "Notifications",
@@ -49,36 +49,71 @@ const settings = () => {
         <ScreenWrapper>
             <Header
                 style={{ marginTop: verticalScale(10) }}
+                leftIcon={
+                    <View style={{ flexDirection: 'row', alignContent: 'center' }}>
+                        <Image source={require('../../assets/images/transparent.png')} style={styles.image} resizeMode="cover" />
+                        <View style={{ marginHorizontal: spacingX._10 }}>
+                            <Typo size={16} fontWeight={'bold'}>Welcome</Typo>
+                            <Typo color={theme.colors.textSecondary}>User</Typo>
+                        </View>
+                    </View>
+                }
                 rightIcon={
                     <TouchableOpacity
-                        onPress={() => {
-                            isAuthenticated ?
-                                logout() : router.push('/(auth)')
-                        }}
-                        style={[
-                            styles.loginButton,
-                            { borderColor: isAuthenticated ? theme.colors.error : theme.colors.textPrimary }
-                        ]}
+                        onPress={() => { }}
+                        style={[styles.iconButton, { left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}
                     >
-                        {
-                            isAuthenticated ? (
-                                <>
-                                    <Entypo name="log-out" size={24} color={theme.colors.error} />
-                                    <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }} color={theme.colors.error}>
-                                        Logout
-                                    </Typo>
-                                </>
-                            ) : (
-                                <>
-                                    <Entypo name="login" size={24} color={theme.colors.textPrimary} />
-                                    <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }}>
-                                        Login
-                                    </Typo>
-                                </>
-                            )
-                        }
+                        <Ionicons
+                            name={"heart-outline"}
+                            size={30}
+                            color={theme.colors.textSecondary}
+                        />
                     </TouchableOpacity>
-                } />
+                }
+            // rightIcon={
+            //   <Button
+            //     onPress={async () => {
+            //       if (isAuthenticated) {
+            //         setIsLoading(true);
+            //         try {
+            //           await logout();
+            //         } finally {
+            //           setIsLoading(false);
+            //         }
+            //       } else {
+            //         router.push('/(auth)');
+            //       }
+            //     }}
+            //     style={[
+            //       styles.loginButton,
+            //       {
+            //         borderColor: isAuthenticated ? theme.colors.error : theme.colors.textPrimary,
+            //         backgroundColor: theme.colors.transparent
+            //       }
+            //     ]}
+            //     loading={isLoading}
+            //     disabled={isLoading}
+            //   >
+            //     {
+            //       isAuthenticated ? (
+            //         <>
+            //           <Entypo name="log-out" size={24} color={theme.colors.error} />
+            //           <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }} color={theme.colors.error}>
+            //             Logout
+            //           </Typo>
+            //         </>
+            //       ) : (
+            //         <>
+            //           <Entypo name="login" size={24} color={theme.colors.textPrimary} />
+            //           <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }}>
+            //             Login
+            //           </Typo>
+            //         </>
+            //       )
+            //     }
+            //   </Button>
+            // } 
+            />
             <View style={[styles.container]}>
 
                 {/* THEME MODE */}
@@ -166,6 +201,10 @@ const settings = () => {
                             />
                         </TouchableOpacity>
                     )}
+                    directionalLockEnabled={true}
+                    bounces={false}
+                    alwaysBounceVertical={false}
+                    scrollEventThrottle={16}
                 />
             </View>
         </ScreenWrapper>
@@ -219,5 +258,17 @@ const styles = StyleSheet.create({
         borderColor: "#ccc",
         flexDirection: 'row',
         justifyContent: 'space-between'
+    },
+    image: {
+        width: verticalScale(50),
+        backgroundColor: 'red',
+        height: verticalScale(50),
+        borderRadius: radius._30
+    },
+    iconButton: {
+        // position: "absolute",
+        // top: 10,
+        borderRadius: 50,
+        padding: 6,
     },
 })

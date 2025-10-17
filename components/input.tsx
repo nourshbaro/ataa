@@ -24,7 +24,7 @@ const Input = (props: InputProps) => {
 
             <View style={styles.inputWrapper}>
                 <TextInput
-                    style={[styles.input, { color: theme.colors.textSecondary }, props.inputStyle]}
+                    style={[styles.input, { color: theme.colors.textSecondary, backgroundColor: theme.colors.inputBackground }, props.inputStyle]}
                     placeholderTextColor={theme.colors.textSecondary}
                     ref={props.inputRef}
                     {...props}
@@ -40,12 +40,13 @@ const styles = StyleSheet.create({
     container: {
         minHeight: verticalScale(54),
         alignItems: 'center',
-        borderWidth: 1,
+        borderWidth: 0,
         borderRadius: radius._17,
         borderCurve: 'continuous',
-        paddingHorizontal: spacingX._15,
+        // paddingHorizontal: spacingX._15,
         flexDirection: 'row',
         gap: spacingX._10,
+        overflow: 'hidden'
     },
     iconWrapper: {
         justifyContent: 'center',
@@ -59,6 +60,8 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         fontSize: verticalScale(14),
-        paddingVertical: verticalScale(12), // ensures touchable height
-    }
+        paddingVertical: verticalScale(12),
+        textAlign: 'center',              // ⬅️ Horizontal centering
+        textAlignVertical: 'center',      // ⬅️ Vertical centering (Android only)
+    },
 })
