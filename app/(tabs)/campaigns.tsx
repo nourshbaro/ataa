@@ -11,7 +11,8 @@ import { useAuth } from '@/context/UserContext'
 import { radius, spacingX, spacingY } from '@/types/theme'
 import { CampaignCardProps } from '@/types/types'
 import { verticalScale } from '@/utils/styling'
-import { Entypo, Ionicons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { Dimensions, FlatList, Image, RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native'
@@ -30,6 +31,7 @@ const campaign = () => {
     const [hasMore, setHasMore] = useState(true);
     const [paginationLoading, setPaginationLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [name, setName] = useState<string | null>(null);
 
     const onRefresh = async () => {
         setIsRefreshing(true);
@@ -87,17 +89,48 @@ const campaign = () => {
         }
     }, [page]);
 
+    useEffect(() => {
+        const fetchName = async () => {
+            const storedName = await AsyncStorage.getItem('name');
+            if (storedName) {
+                setName(storedName);
+            }
+        };
+        fetchName();
+    }, []);
+
     return (
         <ScreenWrapper>
             <Header
                 style={{ marginTop: verticalScale(10) }}
                 leftIcon={
-                    <View style={{ flexDirection: 'row', alignContent: 'center' }}>
-                        <Image source={require('../../assets/images/transparent.png')} style={styles.image} resizeMode="cover" />
-                        <View style={{ marginHorizontal: spacingX._10 }}>
-                            <Typo size={16} fontWeight={'bold'}>Welcome</Typo>
-                            <Typo color={theme.colors.textSecondary}>User</Typo>
-                        </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Image
+                            source={require('../../assets/images/noprofile.jpg')}
+                            style={styles.image}
+                            resizeMode="cover"
+                        />
+
+                        {name ? (
+                            <View style={{ marginHorizontal: spacingX._10 }}>
+                                <Typo size={16} fontWeight='bold'>Welcome</Typo>
+                                <Typo color={theme.colors.textSecondary}>{name}</Typo>
+                            </View>
+                        ) : (
+                            <View style={{ marginHorizontal: spacingX._10 }}>
+                                <Typo size={18} fontWeight="bold">Welcome</Typo>
+                                <TouchableOpacity onPress={() => router.push('/(auth)')} style={{ flexDirection: 'row' }}>
+                                    <Typo color={theme.colors.textSecondary} size={16}>Login</Typo>
+                                    <Ionicons
+                                        name={isRTL ? "chevron-back" : "chevron-forward"}
+                                        size={18}
+                                        color={theme.colors.text}
+                                        style={{ marginLeft: isRTL ? undefined : "auto", marginRight: isRTL ? "auto" : undefined, top: 3 }}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        )}
+
                     </View>
                 }
                 rightIcon={
@@ -111,51 +144,7 @@ const campaign = () => {
                             color={theme.colors.textSecondary}
                         />
                     </TouchableOpacity>
-                }
-            // rightIcon={
-            //   <Button
-            //     onPress={async () => {
-            //       if (isAuthenticated) {
-            //         setIsLoading(true);
-            //         try {
-            //           await logout();
-            //         } finally {
-            //           setIsLoading(false);
-            //         }
-            //       } else {
-            //         router.push('/(auth)');
-            //       }
-            //     }}
-            //     style={[
-            //       styles.loginButton,
-            //       {
-            //         borderColor: isAuthenticated ? theme.colors.error : theme.colors.textPrimary,
-            //         backgroundColor: theme.colors.transparent
-            //       }
-            //     ]}
-            //     loading={isLoading}
-            //     disabled={isLoading}
-            //   >
-            //     {
-            //       isAuthenticated ? (
-            //         <>
-            //           <Entypo name="log-out" size={24} color={theme.colors.error} />
-            //           <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }} color={theme.colors.error}>
-            //             Logout
-            //           </Typo>
-            //         </>
-            //       ) : (
-            //         <>
-            //           <Entypo name="login" size={24} color={theme.colors.textPrimary} />
-            //           <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }}>
-            //             Login
-            //           </Typo>
-            //         </>
-            //       )
-            //     }
-            //   </Button>
-            // } 
-            />
+                } />
             <View style={{ marginTop: verticalScale(10) }}>
                 {isLoadingCampaign ? (
                     <FlatList
@@ -247,7 +236,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: verticalScale(50),
-        backgroundColor: 'red',
+        // backgroundColor: 'red',
         height: verticalScale(50),
         borderRadius: radius._30
     },

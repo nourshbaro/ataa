@@ -55,15 +55,12 @@ const login = () => {
             const accessToken = data.access_token.access_token;
             const refreshToken = data.refresh_token;
             const expiresIn = data.access_token.expires_in;
-            console.log('done');
             await SecureStore.setItemAsync('accessToken', accessToken);
             await SecureStore.setItemAsync('refreshToken', refreshToken);
             await AsyncStorage.setItem('expires_in', JSON.stringify(expiresIn));
-            console.log('done');
+            await AsyncStorage.setItem('name', data.user.name);
             setAccessToken(accessToken);
-            console.log('done');
             router.replace('/(tabs)')
-            console.log('done');
 
         } catch (error) {
             console.error('Login failed', error);

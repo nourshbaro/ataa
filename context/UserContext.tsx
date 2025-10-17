@@ -1,5 +1,6 @@
 import apiClient from '@/api/apiClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { Alert, AppState } from 'react-native';
@@ -129,9 +130,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
                 await SecureStore.deleteItemAsync('accessToken');
                 await SecureStore.deleteItemAsync('refreshToken');
+                await AsyncStorage.removeItem('name')
                 await AsyncStorage.removeItem('expires_in');
                 setAccessToken(null);
                 setRefreshToken(null);
+                router.replace('/(tabs)')
               } catch (error) {
                 console.error('Logout API call failed', error);
               }

@@ -3,7 +3,7 @@ import { spacingX } from '@/types/theme'
 import { HeaderProps } from '@/types/types'
 import { verticalScale } from '@/utils/styling'
 import React from 'react'
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native'
 import Typo from './Typo'
 
 const ICON_WIDTH = verticalScale(40); // approximate width of your icon container
@@ -16,9 +16,9 @@ const Header = ({ rightIcon, leftIcon, style, logo, title }: HeaderProps) => {
     <View style={[styles.container, style]}>
       {/* Left Icon or Spacer */}
       {leftIcon ? (
-        <TouchableOpacity>
+        // <TouchableOpacity>
           <View style={styles.leftIcon}>{leftIcon}</View>
-        </TouchableOpacity>
+        // </TouchableOpacity>
       ) : (
         <View style={{ width: ICON_WIDTH }} />
       )}
