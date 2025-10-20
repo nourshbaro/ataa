@@ -27,6 +27,17 @@ const settings = () => {
             bgColor: "#4A90E2",
             routeName: isAuthenticated ? "/(modals)/account" : '/(auth)',
         },
+        ...(isAuthenticated
+            ? [
+                {
+                    title: t('history'),
+                    icon: <Ionicons name="time" size={22} color="#fff" />,
+                    bgColor: "#F5A623",
+                    routeName: "/(modals)/history",
+                },
+            ]
+            : []),
+
         // {
         //     title: "Notifications",
         //     icon: <Ionicons name="notifications-outline" size={22} color="#fff" />,

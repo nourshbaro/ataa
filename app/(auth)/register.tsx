@@ -35,6 +35,10 @@ const register = () => {
     };
 
     const handleSubmit = async () => {
+        if (!name || !email || !password) {
+            alert('Please Fill All Fields');
+            return;
+        }
         setError('');
         setIsLoading(true)
 
@@ -48,6 +52,7 @@ const register = () => {
             await SecureStore.setItemAsync('accessToken', accessToken);
             await SecureStore.setItemAsync('refreshToken', refreshToken);
             await AsyncStorage.setItem('expires_in', JSON.stringify(expiresIn));
+            await AsyncStorage.setItem('name', data.user.name);
 
             setAccessToken(accessToken);
 

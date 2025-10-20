@@ -10,13 +10,13 @@ import { useTheme } from "@/context/ThemeContext";
 import { useAuth } from "@/context/UserContext";
 import { spacingX, spacingY } from "@/types/theme";
 import { verticalScale } from "@/utils/styling";
-import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -28,7 +28,7 @@ const Payment = () => {
   const { paymentId } = useLocalSearchParams();
   const { theme } = useTheme();
   const { t } = useLanguage()
-  const { accessToken } = useAuth();
+  const { accessToken, refreshAccessToken, refreshLogout } = useAuth();
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<string>("cash");
@@ -56,10 +56,41 @@ const Payment = () => {
       Alert.alert("Success", "Donation successful!\nWe will contact you as soon as possible.");
       setSelectedAmount(null);
       setCustomAmount("");
-
+      router.replace('/(modals)/history');
     } catch (error: any) {
-      console.log("Donation error:", error.message);
-      Alert.alert("Error", error.message ? error.message : "Failed to process your donation.");
+      const status = error?.response?.status;
+      const message = error?.response?.data?.message || error?.message || "Failed to process your donation.";
+      console.log("Donation error:", message);
+
+      if (status === 401) {
+        const newToken = await refreshAccessToken?.();
+        if (newToken) {
+          try {
+            const retryRes = await apiClient.post(
+              "/api/donor/donate",
+              { campaign_id: paymentId, amount },
+              {
+                headers: { Authorization: `Bearer ${newToken}` },
+              }
+            );
+
+            Alert.alert("Success", "Donation successful!\nWe will contact you as soon as possible.");
+            setSelectedAmount(null);
+            setCustomAmount("");
+            router.replace('/(modals)/history');
+            return;
+          } catch (retryErr: any) {
+            console.log("Retry donation failed:", retryErr.message);
+            Alert.alert("Error", "Session expired. Please log in again.");
+            await refreshLogout();
+          }
+        } else {
+          Alert.alert("Error", "Session expired. Please log in again.");
+          await refreshLogout();
+        }
+      } else {
+        Alert.alert("Error", message);
+      }
     } finally {
       setLoading(false);
     }
@@ -79,7 +110,14 @@ const Payment = () => {
           />
         </View>
 
-        <View style={styles.container}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.container}
+          directionalLockEnabled={true}
+          bounces={false}
+          alwaysBounceVertical={false}
+          scrollEventThrottle={16}
+        >
           {/* Title */}
           <Typo size={20} fontWeight="bold" color={theme.colors.textPrimary}>
             {t('selectamount')}
@@ -143,7 +181,7 @@ const Payment = () => {
           />
 
           {/* Payment Methods */}
-          <Typo
+          {/* <Typo
             size={20}
             fontWeight="bold"
             color={theme.colors.textPrimary}
@@ -195,9 +233,9 @@ const Payment = () => {
                 </TouchableOpacity>
               );
             })}
-          </View>
+          </View> */}
 
-        </View>
+        </ScrollView>
         {/* Proceed Button */}
         <Button
           style={[

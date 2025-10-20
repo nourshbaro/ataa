@@ -11,6 +11,8 @@ type AuthContextType = {
   isLoading: boolean;
   setAccessToken: (token: string | null) => void;
   logout: () => Promise<void>;
+  refreshAccessToken: () => Promise<string | null>;
+  refreshLogout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -161,7 +163,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isAuthenticated,
       isLoading,
       setAccessToken,
-      logout
+      logout,
+      refreshAccessToken,
+      refreshLogout
     }}>
       {children}
     </AuthContext.Provider>

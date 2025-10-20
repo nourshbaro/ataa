@@ -23,7 +23,7 @@ type Data = {
 
 const Account = () => {
     const { theme } = useTheme()
-    const { accessToken } = useAuth()
+    const { accessToken, refreshAccessToken, refreshLogout } = useAuth()
     const { t } = useLanguage()
     const { isAuthenticated, logout } = useAuth()
     const [isLoading, setIsLoading] = useState(true);
@@ -58,14 +58,39 @@ const Account = () => {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            const result = await response.data;
-
-            setData(result)
-            AsyncStorage.setItem('name', result.name || 'Unknown')
+            const result = response.data;
+            setData(result);
+            AsyncStorage.setItem('name', result.name || 'Unknown');
         } catch (err: any) {
-            console.log("Error:", err.message);
+            const status = err?.response?.status;
             const message = err?.response?.data?.message || err?.message || 'Something went wrong.';
-            setErrorMessage(message);
+            console.log("Error:", message);
+
+            if (status === 401) {
+                // 🔁 Try refreshing the token
+                const newToken = await refreshAccessToken?.(); // optional chaining in case it's not exposed
+                if (newToken) {
+                    try {
+                        const retryResponse = await apiClient.get("/api/donor/me", {
+                            headers: { Authorization: `Bearer ${newToken}` },
+                        });
+
+                        const result = retryResponse.data;
+                        setData(result);
+                        AsyncStorage.setItem('name', result.name || 'Unknown');
+                        return;
+                    } catch (retryErr: any) {
+                        console.log("Retry failed:", retryErr.message);
+                        setErrorMessage('Session expired. Please log in again.');
+                        await refreshLogout();
+                    }
+                } else {
+                    setErrorMessage('Session expired. Please log in again.');
+                    await refreshLogout();
+                }
+            } else {
+                setErrorMessage(message);
+            }
         } finally {
             setIsLoading(false);
         }
@@ -112,7 +137,7 @@ const Account = () => {
                         <View style={styles.inputContainer}>
                             <Typo>{t('email')}</Typo>
                             <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
-                                <Input value={data?.email} editable={false} style={{ height: verticalScale(54), color: theme.colors.white }} />
+                                <Input value={data?.email} editable={false} style={{ height: verticalScale(54), color: theme.colors.textPrimary }} />
                             </View>
                         </View>
 
