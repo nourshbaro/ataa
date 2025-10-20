@@ -149,14 +149,14 @@ const index = () => {
 
             {name ? (
               <View style={{ marginHorizontal: spacingX._10 }}>
-                <Typo size={16} fontWeight='bold'>Welcome</Typo>
+                <Typo size={16} fontWeight='bold'>{t('welcome')}</Typo>
                 <Typo color={theme.colors.textSecondary}>{name}</Typo>
               </View>
             ) : (
               <View style={{ marginHorizontal: spacingX._10 }}>
-                <Typo size={18} fontWeight="bold">Welcome</Typo>
+                <Typo size={18} fontWeight="bold">{t('welcome')}</Typo>
                 <TouchableOpacity onPress={() => router.push('/(auth)')} style={{ flexDirection: 'row' }}>
-                  <Typo color={theme.colors.textSecondary} size={16}>Login</Typo>
+                  <Typo color={theme.colors.textSecondary} size={16}>{t('login')}</Typo>
                   <Ionicons
                     name={isRTL ? "chevron-back" : "chevron-forward"}
                     size={18}
@@ -234,11 +234,11 @@ const index = () => {
           ) : errorMessage ? (
             <Typo style={styles.errorText} size={15} fontWeight={'400'}>{errorMessage}</Typo>
           ) : catCampaign.length === 0 ? (
-            <Typo style={styles.notfound} size={15} fontWeight={'400'} color={theme.colors.textSecondary}>No campaigns found</Typo>
+            <Typo style={styles.notfound} size={15} fontWeight={'400'} color={theme.colors.textSecondary}>{t('nocampaign')}</Typo>
           ) : (
             <View style={{ marginTop: spacingY._15 }}>
               <Typo size={15} color={theme.colors.textSecondary} style={{ textAlign: 'center' }}>
-                {'No items found'}
+                {t('nocampaign')}
               </Typo>
             </View>
           )
@@ -255,9 +255,9 @@ const index = () => {
           ) : (
             <>
               <View style={styles.titleHeader} >
-                <Typo style={styles.mainTitle} color={theme.colors.textPrimary}>Latest Campaigns</Typo>
+                <Typo style={styles.mainTitle} color={theme.colors.textPrimary}>{t('latestcampaign')}</Typo>
                 <Pressable onPress={() => { router.push('/(tabs)/campaigns') }}>
-                  <Typo style={styles.seeAll} color={theme.colors.textSecondary}>More</Typo>
+                  <Typo style={styles.seeAll} color={theme.colors.textSecondary}>{t('more')}</Typo>
                 </Pressable>
               </View >
 
@@ -324,7 +324,7 @@ const index = () => {
                 }}
               >
                 <Typo color={theme.colors.textSecondary} style={{ fontSize: 15 }} fontWeight={'bold'}>
-                  Click here to view more
+                  {t('viewmore')}
                   {/* See more from this category */}
                 </Typo>
               </Pressable>

@@ -6,6 +6,7 @@ import Header from '@/components/header'
 import Loading from '@/components/Loading'
 import ModalWrapper from '@/components/modalWrapper'
 import Typo from '@/components/Typo'
+import { useLanguage } from '@/context/LanguageContext'
 import { useTheme } from '@/context/ThemeContext'
 import { spacingY } from '@/types/theme'
 import { verticalScale } from '@/utils/styling'
@@ -18,6 +19,7 @@ const { width: screenWidth } = Dimensions.get('window');
 const CategoryCampaign = () => {
     const { catcampId } = useLocalSearchParams();
     const { theme } = useTheme();
+    const { t } = useLanguage()
 
     const [campaigns, setCampaigns] = useState<any[]>([]);
     const [page, setPage] = useState(1);
@@ -104,7 +106,7 @@ const CategoryCampaign = () => {
                 ) : errorMessage ? (
                     <Typo style={styles.errorText} size={15} fontWeight={'400'}>{errorMessage}</Typo>
                 ) : campaigns.length === 0 ? (
-                    <Typo style={styles.notfound} size={15} fontWeight={'400'} color={theme.colors.textSecondary}>No campaigns found</Typo>
+                    <Typo style={styles.notfound} size={15} fontWeight={'400'} color={theme.colors.textSecondary}>{t('nocampaign')}</Typo>
                 ) : (
                     <>
                         <FlatList

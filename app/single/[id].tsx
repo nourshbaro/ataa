@@ -30,7 +30,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const Single = () => {
     const { id } = useLocalSearchParams();
     const { theme } = useTheme();
-    const { isRTL } = useLanguage();
+    const { isRTL, t } = useLanguage();
     const { isAuthenticated } = useAuth()
 
     const [campaign, setCampaign] = useState<Campaigns>();
@@ -157,12 +157,12 @@ const Single = () => {
                 {/* Organized By + Days Left */}
                 <View style={styles.organizedRow}>
                     <Typo color={theme.colors.textSecondary} size={12} style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
-                        Organized by <Typo style={{ fontWeight: '600' }} color={theme.colors.secondary} size={15}>{campaign.ngo}</Typo>
+                        {t('organized')} <Typo style={{ fontWeight: '600' }} color={theme.colors.secondary} size={15}>{campaign.ngo}</Typo>
                     </Typo>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Ionicons name="time-outline" size={16} color={theme.colors.primary} />
                         <Typo style={{ marginHorizontal: 4 }} color={theme.colors.textSecondary} size={12}>
-                            {daysLeft || '0'} days left
+                            {daysLeft || '0'} {t('daysleft')}
                         </Typo>
                     </View>
                 </View>
@@ -175,11 +175,11 @@ const Single = () => {
                     <Typo style={{ color: theme.colors.primary, fontWeight: 'bold' }} size={15}>
                         ${raised.toLocaleString()}
                     </Typo>
-                    <Typo style={{ color: theme.colors.textSecondary }} size={12}> of </Typo>
+                    <Typo style={{ color: theme.colors.textSecondary }} size={12}> {t('of')} </Typo>
                     <Typo style={{ color: theme.colors.textPrimary, fontWeight: 'bold' }} size={15}>
                         ${goal.toLocaleString()}
                     </Typo>
-                    <Typo style={{ color: theme.colors.textSecondary }} size={12}> funded </Typo>
+                    <Typo style={{ color: theme.colors.textSecondary }} size={12}> {t('funded')} </Typo>
                     <View style={{ flex: 1 }} />
                     <Typo style={{ color: theme.colors.textSecondary }} size={15}>{percentage}%</Typo>
                 </View>
@@ -198,10 +198,10 @@ const Single = () => {
 
                 {/* Description */}
                 <Typo style={{ color: theme.colors.textPrimary, marginBottom: 6 }} fontWeight={'bold'}>
-                    Description
+                    {t('description')}
                 </Typo>
                 <Typo style={{ color: theme.colors.textSecondary, lineHeight: 20 }} size={15}>
-                    {campaign.description || 'No description available.'}
+                    {campaign.description || t('nodesc')}
                 </Typo>
 
             </ScrollView>
@@ -212,7 +212,7 @@ const Single = () => {
                     onPress={handleClick}
                 >
                     <Typo style={{ textAlign: 'center', fontWeight: 'bold' }} color={theme.colors.white}>
-                        Donate Now
+                        {t('donate')}
                     </Typo>
                 </Button>
             </View>

@@ -21,7 +21,7 @@ const { width: screenWidth } = Dimensions.get('window');
 
 const campaign = () => {
     const { theme } = useTheme();
-    const { isRTL } = useLanguage();
+    const { isRTL, t } = useLanguage();
     const { isAuthenticated, logout } = useAuth()
 
     const [isLoadingCampaign, setIsLoadingCampaign] = useState(false);
@@ -113,14 +113,14 @@ const campaign = () => {
 
                         {name ? (
                             <View style={{ marginHorizontal: spacingX._10 }}>
-                                <Typo size={16} fontWeight='bold'>Welcome</Typo>
+                                <Typo size={16} fontWeight='bold'>{t('welcome')}</Typo>
                                 <Typo color={theme.colors.textSecondary}>{name}</Typo>
                             </View>
                         ) : (
                             <View style={{ marginHorizontal: spacingX._10 }}>
-                                <Typo size={18} fontWeight="bold">Welcome</Typo>
+                                <Typo size={18} fontWeight="bold">{t('welcome')}</Typo>
                                 <TouchableOpacity onPress={() => router.push('/(auth)')} style={{ flexDirection: 'row' }}>
-                                    <Typo color={theme.colors.textSecondary} size={16}>Login</Typo>
+                                    <Typo color={theme.colors.textSecondary} size={16}>{t('login')}</Typo>
                                     <Ionicons
                                         name={isRTL ? "chevron-back" : "chevron-forward"}
                                         size={18}
@@ -160,7 +160,7 @@ const campaign = () => {
                 ) : errorMessage ? (
                     <Typo style={styles.errorText} size={15} fontWeight={'400'}>{errorMessage}</Typo>
                 ) : campaigns.length === 0 ? (
-                    <Typo style={styles.notfound} size={15} fontWeight={'400'} color={theme.colors.textSecondary}>No campaigns found</Typo>
+                    <Typo style={styles.notfound} size={15} fontWeight={'400'} color={theme.colors.textSecondary}>{t('nocampaign')}</Typo>
                 ) : (
                     <>
                         <FlatList

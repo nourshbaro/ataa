@@ -15,32 +15,32 @@ import { FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-nativ
 
 const settings = () => {
     const { theme, setThemeMode, mode } = useTheme()
-    const { language, setLanguage, isRTL } = useLanguage()
+    const { language, setLanguage, isRTL, t } = useLanguage()
     const { isAuthenticated, logout } = useAuth()
     const [notifications, setNotifications] = useState(true);
     const [name, setName] = useState<string | null>(null);
 
     const accountOptions: accountOptionType[] = [
         {
-            title: isAuthenticated ? "Account" : 'Login',
+            title: isAuthenticated ? t('account') : t('login'),
             icon: <Ionicons name="person-outline" size={22} color="#fff" />,
             bgColor: "#4A90E2",
             routeName: isAuthenticated ? "/(modals)/account" : '/(auth)',
         },
+        // {
+        //     title: "Notifications",
+        //     icon: <Ionicons name="notifications-outline" size={22} color="#fff" />,
+        //     bgColor: "#F5A623",
+        //     // routeName: "/notifications",
+        // },
         {
-            title: "Notifications",
-            icon: <Ionicons name="notifications-outline" size={22} color="#fff" />,
-            bgColor: "#F5A623",
-            // routeName: "/notifications",
-        },
-        {
-            title: "Privacy Policy",
+            title: t('privacy'),
             icon: <MaterialIcons name="privacy-tip" size={22} color="#fff" />,
             bgColor: "#7ED321",
             // routeName: "/privacy",
         },
         {
-            title: "Help & Support",
+            title: t('help'),
             icon: <Ionicons name="help-circle-outline" size={22} color="#fff" />,
             bgColor: "#9013FE",
             // routeName: "/help",
@@ -71,14 +71,14 @@ const settings = () => {
 
                         {name ? (
                             <View style={{ marginHorizontal: spacingX._10 }}>
-                                <Typo size={16} fontWeight='bold'>Welcome</Typo>
+                                <Typo size={16} fontWeight='bold'>{t('welcome')}</Typo>
                                 <Typo color={theme.colors.textSecondary}>{name}</Typo>
                             </View>
                         ) : (
                             <View style={{ marginHorizontal: spacingX._10 }}>
-                                <Typo size={18} fontWeight="bold">Welcome</Typo>
+                                <Typo size={18} fontWeight="bold">{t('welcome')}</Typo>
                                 <TouchableOpacity onPress={() => router.push('/(auth)')} style={{ flexDirection: 'row' }}>
-                                    <Typo color={theme.colors.textSecondary} size={16}>Login</Typo>
+                                    <Typo color={theme.colors.textSecondary} size={16}>{t('login')}</Typo>
                                     <Ionicons
                                         name={isRTL ? "chevron-back" : "chevron-forward"}
                                         size={18}
@@ -107,7 +107,7 @@ const settings = () => {
 
                 {/* THEME MODE */}
                 <View style={[styles.section, { backgroundColor: theme.colors.containerBackground }]}>
-                    <Typo style={styles.sectionTitle}>Theme</Typo>
+                    <Typo style={styles.sectionTitle}>{t('theme')}</Typo>
                     <View style={styles.themeRow}>
                         {['light', 'dark', 'system'].map((m) => (
                             <TouchableOpacity
@@ -131,7 +131,7 @@ const settings = () => {
 
                 {/* LANGUAGES */}
                 <View style={[styles.section, { backgroundColor: theme.colors.containerBackground }]}>
-                    <Typo style={styles.sectionTitle}>Language</Typo>
+                    <Typo style={styles.sectionTitle}>{t('lang')}</Typo>
                     <View style={styles.themeRow}>
                         {["en", "ar"].map((lang) => (
                             <TouchableOpacity

@@ -22,7 +22,7 @@ const CampaignCard = ({
     isLoading,
 }: CampaignCardProps & { cardWidth?: number, isLoading?: boolean }) => {
     const { theme } = useTheme();
-    const { isRTL } = useLanguage();
+    const { isRTL, t } = useLanguage();
     const [isFavorite, setIsFavorite] = useState(false);
 
     const daysLeft = useMemo(() => {
@@ -116,7 +116,7 @@ const CampaignCard = ({
                 <View style={[styles.daysContainer, { backgroundColor: `${theme.colors.containerBackground}BF`, left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}>
                     <Ionicons name="time-outline" size={14} color={theme.colors.text} />
                     <Typo style={styles.daysText} color={theme.colors.text} >
-                        {daysLeft > 0 ? `${daysLeft} days left` : "Ended"}
+                        {daysLeft > 0 ? `${daysLeft} ${t('daysleft')}` : t('ended')}
                     </Typo>
                 </View>
             </View>
@@ -148,11 +148,11 @@ const CampaignCard = ({
             <View style={[styles.fundingRow]}>
                 <Typo style={styles.fundingText}>
                     <Typo style={{ fontWeight: 'bold', fontSize: 15 }} color={theme.colors.primary}>${Number(progress.raised).toLocaleString()}</Typo>
-                    <Typo style={{ fontSize: 15 }} color={theme.colors.textSecondary}> of </Typo>
+                    <Typo style={{ fontSize: 15 }} color={theme.colors.textSecondary}> {t('of')} </Typo>
                     <Typo style={{ fontWeight: 'bold', fontSize: 15 }} color={theme.colors.textPrimary}>
                         ${(Number(progress.raised) + Number(progress.remaining)).toLocaleString()}
                     </Typo>
-                    <Typo style={{ fontSize: 15 }} color={theme.colors.textSecondary}> funded</Typo>
+                    <Typo style={{ fontSize: 15 }} color={theme.colors.textSecondary}> {t('funded')} </Typo>
                 </Typo>
                 <Typo style={{ fontWeight: 'bold', fontSize: 15 }} color={theme.colors.textSecondary}>{progress.percentage}%</Typo>
             </View>

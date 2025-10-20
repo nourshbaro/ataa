@@ -5,6 +5,7 @@ import Header from '@/components/header';
 import Input from '@/components/input';
 import ModalWrapper from '@/components/modalWrapper';
 import Typo from '@/components/Typo';
+import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/UserContext';
 import { radius, spacingY } from '@/types/theme';
@@ -23,6 +24,7 @@ type Data = {
 const Account = () => {
     const { theme } = useTheme()
     const { accessToken } = useAuth()
+    const { t } = useLanguage()
     const { isAuthenticated, logout } = useAuth()
     const [isLoading, setIsLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -74,7 +76,7 @@ const Account = () => {
             <View style={styles.container}>
                 <BackButton iconSize={28} />
                 {/** header */}
-                <Header title='Account Info' />
+                <Header title={t('info')} />
 
                 {/** form */}
                 <ScrollView
@@ -101,14 +103,14 @@ const Account = () => {
                         </View> */}
 
                         <View style={styles.inputContainer}>
-                            <Typo>Name</Typo>
+                            <Typo>{t('name')}</Typo>
                             <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
                                 <Input value={data?.name} editable={false} style={{ height: verticalScale(54), color: theme.colors.textPrimary }} />
                             </View>
                         </View>
 
                         <View style={styles.inputContainer}>
-                            <Typo>Email</Typo>
+                            <Typo>{t('email')}</Typo>
                             <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
                                 <Input value={data?.email} editable={false} style={{ height: verticalScale(54), color: theme.colors.white }} />
                             </View>
@@ -121,10 +123,10 @@ const Account = () => {
                 </ScrollView>
                 <View style={styles.inputContainer}>
                     {/* <Typo>Logout</Typo> */}
-                    <Button style={{ backgroundColor: theme.colors.transparent, borderColor: theme.colors.error, borderWidth: 1, flexDirection: 'row' }} onPress={()=> logout()}>
+                    <Button style={{ backgroundColor: theme.colors.transparent, borderColor: theme.colors.error, borderWidth: 1, flexDirection: 'row' }} onPress={() => logout()}>
                         <Entypo name="log-out" size={24} color={theme.colors.error} />
                         <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }} color={theme.colors.error}>
-                            Logout
+                            {t('logout')}
                         </Typo>
                     </Button>
                     {/* <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>

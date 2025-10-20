@@ -18,10 +18,12 @@ import * as SecureStore from 'expo-secure-store';
 import React, { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { styles } from '../../styles/authform.styles';
+import { useLanguage } from '@/context/LanguageContext';
 
 const login = () => {
     const { theme } = useTheme();
     const router = useRouter();
+    const { t } = useLanguage()
 
     const [email, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -97,15 +99,15 @@ const login = () => {
                 <View style={styles.container}>
 
                     <View style={{ gap: 5, marginTop: spacingY._20, }}>
-                        <Typo size={28} fontWeight={'bold'}>Login</Typo>
-                        <Typo size={15} fontWeight={'300'} color={theme.colors.textSecondary}>Create an account or login with your details to get started</Typo>
+                        <Typo size={28} fontWeight={'bold'}>{t('login')}</Typo>
+                        <Typo size={15} fontWeight={'300'} color={theme.colors.textSecondary}>{t('createorlogin')}</Typo>
                     </View>
 
                     <View style={[styles.form]}>
 
                         <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
                             <Input
-                                placeholder='Email Address'
+                                placeholder={t('email')}
                                 onChangeText={setUsername}
                                 editable={!isLoading}
                                 style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
@@ -120,7 +122,7 @@ const login = () => {
                         </View>
                         <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
                             <Input
-                                placeholder='Password'
+                                placeholder={t('pass')}
                                 secureTextEntry
                                 onChangeText={setPassword}
                                 editable={!isLoading}
@@ -143,7 +145,7 @@ const login = () => {
 
                     <View style={styles.footer}>
                         <Button loading={isLoading} disabled={isLoading} onPress={handleSubmit} style={{ width: '100%', marginBottom: spacingY._15 }}>
-                            <Typo fontWeight={'500'} color={theme.colors.background} size={21}>Login</Typo>
+                            <Typo fontWeight={'500'} color={theme.colors.background} size={21}>{t('login')}</Typo>
                         </Button>
                         <Button
                             disabled={isLoading}
@@ -157,7 +159,7 @@ const login = () => {
                                 borderWidth: 1,
                             }}
                         >
-                            <Typo fontWeight={'300'} color={theme.colors.textSecondary} size={18}>Create an account</Typo>
+                            <Typo fontWeight={'300'} color={theme.colors.textSecondary} size={18}>{t('create')}</Typo>
                         </Button>
 
                     </View>

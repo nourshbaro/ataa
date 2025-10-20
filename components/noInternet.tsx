@@ -2,8 +2,10 @@ import Typo from '@/components/Typo';
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import ScreenWrapper from './ScreenWrapper';
+import { useLanguage } from '@/context/LanguageContext';
 
 const NoInternet = () => {
+    const {t}= useLanguage()
     return (
         <ScreenWrapper>
             <View style={styles.container}>
@@ -12,8 +14,8 @@ const NoInternet = () => {
                     style={styles.backgroundImage}
                     resizeMode='contain'
                 />
-                <Typo style={styles.text}>No Internet Connection</Typo>
-                <Typo style={styles.text}>Please try again later</Typo>
+                <Typo style={styles.text}>{t('nointernet')}</Typo>
+                <Typo style={styles.text}>{t('trylater')}</Typo>
             </View>
         </ScreenWrapper>
     );

@@ -17,9 +17,11 @@ import * as SecureStore from 'expo-secure-store';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { styles } from '../../styles/authform.styles';
+import { useLanguage } from '@/context/LanguageContext';
 
 const register = () => {
     const { theme } = useTheme();
+    const { t } = useLanguage()
     const { setAccessToken } = useAuth()
     const router = useRouter();
     const [name, setName] = useState('');
@@ -34,6 +36,7 @@ const register = () => {
 
     const handleSubmit = async () => {
         setError('');
+        setIsLoading(true)
 
         try {
             const response = await apiClient.post('/api/donor/register', { name, email, password });
@@ -54,6 +57,8 @@ const register = () => {
             console.log(name, email, password);
 
             setError('Invalid email.');
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -83,8 +88,8 @@ const register = () => {
                     <View style={styles.container}>
 
                         <View style={{ gap: 5, marginTop: spacingY._20, }}>
-                            <Typo size={28} fontWeight={'bold'}>Create an Account</Typo>
-                            <Typo size={15} fontWeight={'300'} color={theme.colors.textSecondary}>Fill out the fields below to access your account.</Typo>
+                            <Typo size={28} fontWeight={'bold'}>{t('createaccount')}</Typo>
+                            <Typo size={15} fontWeight={'300'} color={theme.colors.textSecondary}>{t('fill')}</Typo>
                         </View>
 
                         {/** form */}
@@ -93,7 +98,7 @@ const register = () => {
 
                             <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
                                 <Input
-                                    placeholder='Full Name'
+                                    placeholder={t('name')}
                                     onChangeText={setName}
                                     editable={!isLoading}
                                     style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
@@ -109,7 +114,7 @@ const register = () => {
                             {/** input */}
                             <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
                                 <Input
-                                    placeholder='Email Address'
+                                    placeholder={t('email')}
                                     onChangeText={setEmail}
                                     editable={!isLoading}
                                     style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
@@ -124,7 +129,7 @@ const register = () => {
                             </View>
                             <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
                                 <Input
-                                    placeholder='Password'
+                                    placeholder={t('pass')}
                                     secureTextEntry
                                     onChangeText={setPassword}
                                     editable={!isLoading}
@@ -144,7 +149,7 @@ const register = () => {
 
                         <View style={styles.footer}>
                             <Button loading={isLoading} disabled={isLoading} onPress={handleSubmit} style={{ width: '100%', marginBottom: spacingY._15 }}>
-                                <Typo fontWeight={'500'} color={theme.colors.background} size={21}>Proceed</Typo>
+                                <Typo fontWeight={'500'} color={theme.colors.background} size={21}>{t('proceed')}</Typo>
                             </Button>
                         </View>
                     </View>

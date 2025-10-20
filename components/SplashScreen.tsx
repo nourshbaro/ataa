@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, Dimensions, Image, StyleSheet, View } from 'react-native';
 import ScreenWrapper from './ScreenWrapper';
 import Typo from './Typo';
+import { useLanguage } from '@/context/LanguageContext';
 
 const { width, height } = Dimensions.get("window");
 
@@ -13,6 +14,7 @@ type CustomSplashScreenProps = {
 
 const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({ onFinish }) => {
   const { theme } = useTheme();
+  const {t} = useLanguage()
   const opacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -48,10 +50,10 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({ onFinish }) => 
             />
             <View style={styles.textBlock}>
               <Typo style={styles.footerText}>
-                Powered by
+                {t('powered')}
               </Typo>
               <Typo style={styles.bold}>
-                Ja-Square
+                {t('jasquare')}
               </Typo>
             </View>
           </View>

@@ -5,6 +5,7 @@ import Header from "@/components/header";
 import Input from "@/components/input";
 import ModalWrapper from "@/components/modalWrapper";
 import Typo from "@/components/Typo";
+import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useAuth } from "@/context/UserContext";
 import { spacingX, spacingY } from "@/types/theme";
@@ -26,6 +27,7 @@ const presetAmounts = [50, 100, 150, 200];
 const Payment = () => {
   const { paymentId } = useLocalSearchParams();
   const { theme } = useTheme();
+  const { t } = useLanguage()
   const { accessToken } = useAuth();
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
@@ -80,7 +82,7 @@ const Payment = () => {
         <View style={styles.container}>
           {/* Title */}
           <Typo size={20} fontWeight="bold" color={theme.colors.textPrimary}>
-            Select Amount
+            {t('selectamount')}
           </Typo>
 
           {/* Preset Amount Boxes */}
@@ -147,7 +149,7 @@ const Payment = () => {
             color={theme.colors.textPrimary}
             style={{ marginTop: spacingY._15 }}
           >
-            Choose Payment Method
+            {t('method')}
           </Typo>
 
           <View style={styles.methods}>
@@ -187,7 +189,7 @@ const Payment = () => {
                       fontWeight="medium"
                       size={16}
                     >
-                      {method === "cash" ? "Cash" : "Blue"}
+                      {method === "cash" ? t('cash') : t('blue')}
                     </Typo>
                   </View>
                 </TouchableOpacity>
@@ -210,7 +212,7 @@ const Payment = () => {
           loading={loading}
         >
           <Typo color={theme.colors.white} size={18} fontWeight="bold">
-            Proceed
+            {t('proceed')}
           </Typo>
         </Button>
       </KeyboardAvoidingView>

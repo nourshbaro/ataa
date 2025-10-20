@@ -4,8 +4,10 @@ import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import Loading from './Loading';
 import ScreenWrapper from './ScreenWrapper';
+import { useLanguage } from '@/context/LanguageContext';
 
 const WaitingInternet = () => {
+    const { t } = useLanguage()
     return (
         <ScreenWrapper>
             <View style={styles.container}>
@@ -14,7 +16,7 @@ const WaitingInternet = () => {
                     style={styles.backgroundImage}
                     resizeMode='contain'
                 />
-                <Typo style={styles.text}>Loading Connection...</Typo>
+                <Typo style={styles.text}>{t('loadinginternet')}</Typo>
                 <Loading />
             </View>
         </ScreenWrapper>

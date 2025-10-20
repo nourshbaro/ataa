@@ -53,6 +53,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await SecureStore.setItemAsync('refreshToken', newRefreshToken);
       setAccessToken(newAccessToken);
       setRefreshToken(newRefreshToken);
+      console.log('Token Refreshed Successfully');
+      
       return newAccessToken;
     } catch {
       return null;
@@ -62,6 +64,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const refreshLogout = async () => {
     await SecureStore.deleteItemAsync('accessToken');
     await SecureStore.deleteItemAsync('refreshToken');
+    await AsyncStorage.removeItem('name')
     await AsyncStorage.removeItem('expires_in');
     setAccessToken(null);
     setRefreshToken(null);
