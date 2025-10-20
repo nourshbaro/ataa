@@ -19,7 +19,7 @@
     "donate": "Donate Now",
     "nointernet": "No Internet Connection",
     "trylater": "Please try again later",
-    "powered" : "Powered by",
+    "powered": "Powered by",
     "jasquare": "Ja-Square",
     "loadinginternet": "Loading Connection...",
     "ended": "Ended",
@@ -31,17 +31,14 @@
     "nocampaign": "No campaigns found",
     "nocat": "No category found",
     "latestcampaign": "Latest Campaigns",
-    "more" : "More",
+    "more": "More",
     "viewmore": "Click here to view more",
-    "account" : "Account",
-    "privacy":"Privacy Policy",
+    "account": "Account",
+    "privacy": "Privacy Policy",
     "help": "Help & Support",
-    "theme" : "Theme",
-    "lang":"Language",
-
-
-
-
+    "theme": "Theme",
+    "lang": "Language",
+    "": "",
     "changeLanguage": "Change Language",
     "home": "Home",
     "campaigns": "Campaigns",
@@ -98,7 +95,6 @@
     "goBack": "Go Back",
     "by": "By",
     "raised": " Raised",
-    
     "fundRaisedFrom": "fund raised from",
     "till": "Till",
     "success": "Success",
