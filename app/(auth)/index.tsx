@@ -6,6 +6,7 @@ import Input from '@/components/input';
 import Loading from '@/components/Loading';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
+import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/UserContext';
 import { radius, spacingY } from '@/types/theme';
@@ -18,14 +19,13 @@ import * as SecureStore from 'expo-secure-store';
 import React, { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { styles } from '../../styles/authform.styles';
-import { useLanguage } from '@/context/LanguageContext';
 
 const login = () => {
     const { theme } = useTheme();
     const router = useRouter();
     const { t } = useLanguage()
 
-    const [email, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
@@ -35,7 +35,19 @@ const login = () => {
 
     const canSubmit = cooldown === 0;
 
-    const startCooldown = () => setCooldown(cooldownSeconds);
+    useEffect(() => {
+        if (cooldown <= 0) return;
+        const id = setInterval(() => {
+            setCooldown(prev => {
+                if (prev <= 1) {
+                    clearInterval(id);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+        return () => clearInterval(id);
+    }, [cooldown]);
 
     useEffect(() => {
         if (cooldown === 0) return;
@@ -64,16 +76,22 @@ const login = () => {
             setAccessToken(accessToken);
             router.replace('/(tabs)')
 
-        } catch (error) {
-            console.error('Login failed', error);
+        } catch (error: any) {
+            console.error('Signin failed', error);
+
             if (axios.isAxiosError(error) && error.response?.status === 429) {
                 setError(`Too many attempts. Try again in ${cooldownSeconds}s.`);
-                startCooldown();
+                setCooldown(cooldownSeconds);
             } else {
-                setError('Invalid email or password.');
+                const apiMessage =
+                    error?.response?.data?.message ||
+                    error?.response?.data?.error ||
+                    error?.message ||
+                    'Something went wrong. Please try again.';
+                setError(apiMessage);
             }
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
     };
 
@@ -108,7 +126,7 @@ const login = () => {
                         <View style={{ borderWidth: 1, borderRadius: radius._15, paddingHorizontal: spacingY._15, borderColor: theme.colors.text }}>
                             <Input
                                 placeholder={t('email')}
-                                onChangeText={setUsername}
+                                onChangeText={setEmail}
                                 editable={!isLoading}
                                 style={{ height: verticalScale(54), color: theme.colors.textPrimary }}
                                 icon={<MaterialIcons
@@ -144,8 +162,15 @@ const login = () => {
                     </View>
 
                     <View style={styles.footer}>
-                        <Button loading={isLoading} disabled={isLoading} onPress={handleSubmit} style={{ width: '100%', marginBottom: spacingY._15 }}>
-                            <Typo fontWeight={'500'} color={theme.colors.background} size={21}>{t('login')}</Typo>
+                        <Button
+                            loading={isLoading}
+                            disabled={! canSubmit}
+                            onPress={handleSubmit}
+                            style={{ width: '100%', marginBottom: spacingY._15 }}
+                        >
+                            <Typo fontWeight="500" color={theme.colors.background} size={21}>
+                                {canSubmit ? t('login') : `${cooldown}s`}
+                            </Typo>
                         </Button>
                         <Button
                             disabled={isLoading}

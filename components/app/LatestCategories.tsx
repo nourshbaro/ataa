@@ -17,7 +17,7 @@ const itemWidth =
 
 
 type Props = {
-    categories: { id: number; name: string; icon?: string }[];
+    categories: { id: number; name: string; icon_name?: string }[];
     selectedId: number;
     onSelect: (id: number) => void;
     // isRefreshing: boolean;
@@ -39,7 +39,7 @@ const LatestCategories = ({
     const displayedCategories = categories.slice(0, 3).concat({
         id: 0,
         name: 'Other',
-        icon: 'grid-outline',
+        icon_name: 'grid-outline',
     });
 
     return (
@@ -75,7 +75,7 @@ const LatestCategories = ({
                             <CategoryCard
                                 id={item.id}
                                 name={item.name}
-                                icon={item.icon}
+                                icon_name={item.icon_name}
                                 selectedId={selectedId}
                                 onSelect={onSelect}
                                 width={itemWidth * 0.9} // make it slightly smaller to add padding inside

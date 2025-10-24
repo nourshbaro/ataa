@@ -129,7 +129,7 @@ export type LatestCategoriesProps = {
 export type Categories = {
   id: number;
   name: string;
-  icon?: string;
+  icon_name?: string;
 }
 
 export type CatCampaignType = {

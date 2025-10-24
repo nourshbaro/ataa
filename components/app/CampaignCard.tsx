@@ -1,15 +1,15 @@
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { styles } from "@/styles/latestCampaign.styles";
-import { spacingX, spacingY } from "@/types/theme";
-import { CampaignCardProps } from "@/types/types"; // adjust path if different
+import { spacingY } from "@/types/theme";
+import { CampaignCardProps } from "@/types/types";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
 import * as Progress from "react-native-progress";
 import Typo from "../Typo";
-import Skeleton from "../skeleton";
+import SkeletonCardCampaign from "./SkeletonCardCampaign";
 
 const CampaignCard = ({
     id,
@@ -20,64 +20,24 @@ const CampaignCard = ({
     progress,
     cardWidth,
     isLoading,
-}: CampaignCardProps & { cardWidth?: number, isLoading?: boolean }) => {
+    isSaved,
+    onToggleSave,
+}: CampaignCardProps & {
+    cardWidth?: number;
+    isLoading?: boolean;
+    isSaved?: boolean;
+    onToggleSave?: () => void;
+}) => {
     const { theme } = useTheme();
     const { isRTL, t } = useLanguage();
-    const [isFavorite, setIsFavorite] = useState(false);
 
     const daysLeft = useMemo(() => {
         const today = new Date();
         const end = new Date(end_date);
-        const diff = Math.max(0, Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
-        return diff;
+        return Math.max(0, Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
     }, [end_date]);
 
-    if (isLoading) {
-        return (
-            <View style={{ marginVertical: spacingY._5, alignItems: 'center', marginHorizontal: spacingX._20 }}>
-                <View
-                    style={{
-                        backgroundColor: theme.colors.containerBackground,
-                        borderRadius: 16,
-                        paddingBottom: 10,
-                        width: cardWidth,
-                        overflow: "hidden",
-                    }}
-                >
-                    <Skeleton height={200} radius={16} />
-                    <Skeleton
-                        height={20}
-                        width={'50%'}
-                        radius={6}
-                        style={{ marginTop: 8, marginHorizontal: 10 }}
-                    />
-                    <Skeleton
-                        height={1}
-                        width={'87%'}
-                        radius={0}
-                        style={{ marginVertical: 8, marginHorizontal: 20, alignSelf: "center" }}
-                    />
-                    <Skeleton
-                        height={10}
-                        width={'90%'}
-                        radius={6}
-                        style={{ marginVertical: 8, marginHorizontal: 10, alignSelf: "center" }}
-                    />
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            marginHorizontal: 10,
-                            marginTop: 8,
-                        }}
-                    >
-                        <Skeleton width="60%" height={16} radius={4} />
-                        <Skeleton width={40} height={16} radius={4} />
-                    </View>
-                </View>
-            </View>
-        );
-    }
+    if (isLoading) return <SkeletonCardCampaign />;
 
     return (
         <TouchableOpacity
@@ -89,45 +49,62 @@ const CampaignCard = ({
                     width: cardWidth,
                 },
             ]}
-            onPress={() => {
+            onPress={() =>
                 router.push({
-                    pathname: '/single/[id]',
-                    params: { id: id },
-                });
-            }}
+                    pathname: "/single/[id]",
+                    params: { id },
+                })
+            }
         >
-            {/* Image Section */}
-            <View style={[styles.imageWrapper, { shadowColor: theme.colors.text, }]}>
-                <Image source={featured_image ? { uri: featured_image } : require('../../assets/images/transparent.png')} style={styles.image} resizeMode="cover" />
+            {/* Image */}
+            <View style={[styles.imageWrapper, { shadowColor: theme.colors.text }]}>
+                <Image
+                    source={featured_image ? { uri: featured_image } : require("../../assets/images/transparent.png")}
+                    style={styles.image}
+                    resizeMode="cover"
+                />
 
-                {/* Favorite Icon */}
+                {/* Favorite / Save Button */}
                 <TouchableOpacity
-                    onPress={() => setIsFavorite(!isFavorite)}
-                    style={[styles.iconButton, { backgroundColor: `${theme.colors.containerBackground}BF`, left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}
+                    onPress={onToggleSave}
+                    style={[
+                        styles.iconButton,
+                        {
+                            backgroundColor: `${theme.colors.containerBackground}BF`,
+                            left: isRTL ? 10 : undefined,
+                            right: isRTL ? undefined : 10,
+                        },
+                    ]}
                 >
                     <Ionicons
-                        name={isFavorite ? "heart" : "heart-outline"}
+                        name={isSaved ? "bookmark" : "bookmark-outline"}
                         size={20}
-                        color={isFavorite ? theme.colors.secondary : theme.colors.textSecondary}
+                        color={isSaved ? theme.colors.secondary : theme.colors.textSecondary}
                     />
                 </TouchableOpacity>
 
                 {/* Days Left */}
-                <View style={[styles.daysContainer, { backgroundColor: `${theme.colors.containerBackground}BF`, left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}>
+                <View
+                    style={[
+                        styles.daysContainer,
+                        {
+                            backgroundColor: `${theme.colors.containerBackground}BF`,
+                            left: isRTL ? 10 : undefined,
+                            right: isRTL ? undefined : 10,
+                        },
+                    ]}
+                >
                     <Ionicons name="time-outline" size={14} color={theme.colors.text} />
-                    <Typo style={styles.daysText} color={theme.colors.text} >
-                        {daysLeft > 0 ? `${daysLeft} ${t('daysleft')}` : t('ended')}
+                    <Typo style={styles.daysText} color={theme.colors.text}>
+                        {daysLeft > 0 ? `${daysLeft} ${t("daysleft")}` : t("ended")}
                     </Typo>
                 </View>
             </View>
 
             {/* Title */}
-            <Typo style={styles.title} numberOfLines={2} color={theme.colors.textPrimary} >
+            <Typo style={styles.title} numberOfLines={2} color={theme.colors.textPrimary}>
                 {title}
             </Typo>
-
-            {/* NGO name */}
-            {/* <Text style={[styles.ngoText, { color: theme.colors.textSecondary }]}>{ngo}</Text> */}
 
             {/* Separator */}
             <View style={[styles.separator, { backgroundColor: theme.colors.border }]} />
@@ -147,14 +124,24 @@ const CampaignCard = ({
             {/* Funding Info */}
             <View style={[styles.fundingRow]}>
                 <Typo style={styles.fundingText}>
-                    <Typo style={{ fontWeight: 'bold', fontSize: 15 }} color={theme.colors.primary}>${Number(progress.raised).toLocaleString()}</Typo>
-                    <Typo style={{ fontSize: 15 }} color={theme.colors.textSecondary}> {t('of')} </Typo>
-                    <Typo style={{ fontWeight: 'bold', fontSize: 15 }} color={theme.colors.textPrimary}>
+                    <Typo style={{ fontWeight: "bold", fontSize: 15 }} color={theme.colors.primary}>
+                        ${Number(progress.raised).toLocaleString()}
+                    </Typo>
+                    <Typo style={{ fontSize: 15 }} color={theme.colors.textSecondary}>
+                        {" "}
+                        {t("of")}{" "}
+                    </Typo>
+                    <Typo style={{ fontWeight: "bold", fontSize: 15 }} color={theme.colors.textPrimary}>
                         ${(Number(progress.raised) + Number(progress.remaining)).toLocaleString()}
                     </Typo>
-                    <Typo style={{ fontSize: 15 }} color={theme.colors.textSecondary}> {t('funded')} </Typo>
+                    <Typo style={{ fontSize: 15 }} color={theme.colors.textSecondary}>
+                        {" "}
+                        {t("funded")}
+                    </Typo>
                 </Typo>
-                <Typo style={{ fontWeight: 'bold', fontSize: 15 }} color={theme.colors.textSecondary}>{progress.percentage}%</Typo>
+                <Typo style={{ fontWeight: "bold", fontSize: 15 }} color={theme.colors.textSecondary}>
+                    {progress.percentage}%
+                </Typo>
             </View>
         </TouchableOpacity>
     );

@@ -6,6 +6,7 @@ import Loading from '@/components/Loading';
 import ModalWrapper from '@/components/modalWrapper';
 import Typo from '@/components/Typo';
 import { useLanguage } from '@/context/LanguageContext';
+import { useSave } from '@/context/SavedContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/UserContext';
 import { spacingY } from '@/types/theme';
@@ -31,12 +32,13 @@ const Single = () => {
     const { id } = useLocalSearchParams();
     const { theme } = useTheme();
     const { isRTL, t } = useLanguage();
-    const { isAuthenticated } = useAuth()
+    const { isAuthenticated, refreshAccessToken, accessToken, refreshLogout } = useAuth()
 
     const [campaign, setCampaign] = useState<Campaigns>();
     const [isLoading, setIsLoading] = useState(true);
-    const [isFavorite, setIsFavorite] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const { savedCampaignIds, handleToggleSave } = useSave();
+
 
     useEffect(() => {
         if (id) fetchData();
@@ -145,13 +147,20 @@ const Single = () => {
                     <Typo style={{ flex: 1, color: theme.colors.textPrimary, fontSize: 28 }} fontWeight={'bold'}>
                         {campaign.title}
                     </Typo>
-                    <TouchableOpacity onPress={() => setIsFavorite(!isFavorite)}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            isAuthenticated
+                                ? handleToggleSave(campaign?.id)
+                                : router.push('/(auth)');
+                        }}
+                    >
                         <Ionicons
-                            name={isFavorite ? "heart" : "heart-outline"}
+                            name={savedCampaignIds.includes(campaign?.id) ? "bookmark" : "bookmark-outline"}
                             size={26}
-                            color={isFavorite ? theme.colors.secondary : theme.colors.textSecondary}
+                            color={savedCampaignIds.includes(campaign?.id) ? theme.colors.secondary : theme.colors.textSecondary}
                         />
                     </TouchableOpacity>
+
                 </View>
 
                 {/* Organized By + Days Left */}

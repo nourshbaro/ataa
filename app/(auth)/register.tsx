@@ -6,6 +6,7 @@ import Input from '@/components/input';
 import Loading from '@/components/Loading';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
+import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/UserContext';
 import { radius, spacingY } from '@/types/theme';
@@ -17,7 +18,6 @@ import * as SecureStore from 'expo-secure-store';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { styles } from '../../styles/authform.styles';
-import { useLanguage } from '@/context/LanguageContext';
 
 const register = () => {
     const { theme } = useTheme();
@@ -52,17 +52,23 @@ const register = () => {
             await SecureStore.setItemAsync('accessToken', accessToken);
             await SecureStore.setItemAsync('refreshToken', refreshToken);
             await AsyncStorage.setItem('expires_in', JSON.stringify(expiresIn));
-            await AsyncStorage.setItem('name', data.user.name);
+            await AsyncStorage.setItem('name', data.donor.name);
 
             setAccessToken(accessToken);
 
             router.replace('/(tabs)')
-        } catch (error) {
+        } catch (error: any) {
             console.error('Signup failed', error);
-            console.log(name, email, password);
 
-            setError('Invalid email.');
-        } finally {
+            const apiMessage =
+                error?.response?.data?.message ||
+                error?.response?.data?.error ||
+                error?.message ||
+                'Something went wrong. Please try again.';
+
+            setError(apiMessage);
+        }
+        finally {
             setIsLoading(false)
         }
     };

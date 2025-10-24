@@ -2,6 +2,7 @@ import NetworkGuard from "@/components/NetworkGuard";
 import CustomSplashScreen from "@/components/SplashScreen";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { NetworkProvider } from "@/context/NetworkContext";
+import { SaveProvider } from "@/context/SavedContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { UserProvider } from "@/context/UserContext";
 import { router, SplashScreen, Stack } from "expo-router";
@@ -12,7 +13,7 @@ SplashScreen.preventAutoHideAsync();
 
 function RootLayoutInner() {
   const [isSplashVisible, setSplashVisible] = useState(true);
-  const {theme} = useTheme()
+  const { theme } = useTheme()
   const handleSplashScreenFinish = () => {
     setSplashVisible(false);
   };
@@ -39,11 +40,13 @@ export default function RootLayout() {
     <UserProvider>
       <LanguageProvider>
         <ThemeProvider>
-          <NetworkProvider>
-            <NetworkGuard>
-              <RootLayoutInner />
-            </NetworkGuard>
-          </NetworkProvider>
+          <SaveProvider>
+            <NetworkProvider>
+              <NetworkGuard>
+                <RootLayoutInner />
+              </NetworkGuard>
+            </NetworkProvider>
+          </SaveProvider>
         </ThemeProvider>
       </LanguageProvider>
     </UserProvider>

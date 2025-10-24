@@ -75,9 +75,9 @@ const settings = () => {
                 leftIcon={
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image
-                            source={require('../../assets/images/noprofile.jpg')}
+                            source={require('../../assets/images/ataalogo.png')}
                             style={styles.image}
-                            resizeMode="cover"
+                            resizeMode="contain"
                         />
 
                         {name ? (
@@ -104,11 +104,11 @@ const settings = () => {
                 }
                 rightIcon={
                     <TouchableOpacity
-                        onPress={() => { }}
+                        onPress={() => { router.push('/(modals)/saved') }}
                         style={[styles.iconButton, { left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}
                     >
                         <Ionicons
-                            name={"heart-outline"}
+                            name={"bookmark-outline"}
                             size={30}
                             color={theme.colors.textSecondary}
                         />

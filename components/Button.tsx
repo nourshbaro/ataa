@@ -10,28 +10,46 @@ const Button = ({
     style,
     onPress,
     loading = false,
-    children
+    disabled = false,
+    children,
 }: CustomButtonProps) => {
-
-    const { theme, mode } = useTheme();
+    const { theme } = useTheme();
 
     if (loading) {
         return (
-            <View style={[styles.button, style, { backgroundColor: theme.colors.transparent }]}>
+            <View
+                style={[
+                    styles.button,
+                    style,
+                    { backgroundColor: theme.colors.transparent },
+                ]}
+            >
                 <Loading style={{ flex: 1 }} />
             </View>
-        )
+        );
     }
 
-
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: theme.colors.primary }, style,]}>
+        <TouchableOpacity
+            onPress={!disabled ? onPress : undefined}
+            activeOpacity={disabled ? 1 : 0.7}
+            disabled={disabled}
+            style={[
+                styles.button,
+                {
+                    backgroundColor: disabled
+                        ? theme.colors.textSecondary + '55' // semi-transparent when disabled
+                        : theme.colors.primary,
+                },
+                style,
+            ]}
+        >
             {children}
         </TouchableOpacity>
-    )
-}
+    );
+};
 
-export default Button
+export default Button;
 
 const styles = StyleSheet.create({
     button: {
@@ -39,6 +57,6 @@ const styles = StyleSheet.create({
         borderCurve: 'continuous',
         height: verticalScale(52),
         justifyContent: 'center',
-        alignItems: 'center'
-    }
-})
+        alignItems: 'center',
+    },
+});

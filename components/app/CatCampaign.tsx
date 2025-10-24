@@ -1,7 +1,10 @@
 import { useLanguage } from '@/context/LanguageContext';
+import { useSave } from '@/context/SavedContext';
 import { useTheme } from '@/context/ThemeContext';
+import { useAuth } from '@/context/UserContext';
 import { spacingY } from '@/types/theme';
-import React from 'react';
+import { router } from 'expo-router';
+import React, { useEffect } from 'react';
 import { Dimensions, FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import Skeleton from '../skeleton';
 import CampaignCard from './CampaignCard';
@@ -18,6 +21,13 @@ const { width: screenWidth } = Dimensions.get('window');
 const CatCampaign = ({ data, isRefreshing, onRefresh, isLoading }: LatestCampaignProps) => {
     const { theme } = useTheme()
     const { isRTL } = useLanguage()
+    const { savedCampaignIds, fetchSavedCampaigns, handleToggleSave } = useSave();
+    const { isAuthenticated } = useAuth()
+
+    useEffect(() => {
+        fetchSavedCampaigns();
+      }, []);
+
     return (
         <View style={{ flexGrow: 0 }}>
             {isLoading ? (
@@ -94,7 +104,8 @@ const CatCampaign = ({ data, isRefreshing, onRefresh, isLoading }: LatestCampaig
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item }) => (
                         <View style={{ marginBottom: spacingY._10 }}>
-                            <CampaignCard {...item} cardWidth={screenWidth * 0.95} />
+                            <CampaignCard {...item} cardWidth={screenWidth * 0.95} isLoading={isLoading} isSaved={savedCampaignIds.includes(item.id)}
+                                onToggleSave={() => isAuthenticated ? handleToggleSave(item.id) : router.push('/(auth)') } />
                         </View>
                     )}
                     refreshControl={

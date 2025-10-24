@@ -2,13 +2,13 @@ import { useTheme } from '@/context/ThemeContext';
 import { verticalScale } from '@/utils/styling';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Image, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import Typo from '../Typo';
 
 type Props = {
   id: number;
   name: string;
-  icon?: string;
+  icon_name?: string;
   selectedId: number;
   onSelect: (id: number) => void;
   width?: number;
@@ -18,7 +18,7 @@ type Props = {
 const CategoryCard = ({
   id,
   name,
-  icon,
+  icon_name,
   selectedId,
   onSelect,
   width = verticalScale(75),
@@ -28,11 +28,6 @@ const CategoryCard = ({
   const isSelected = id === selectedId;
   const borderColor = isSelected ? theme.colors.primary : theme.colors.border;
   const iconColor = isSelected ? theme.colors.primary : theme.colors.textSecondary;
-
-  const isImageUrl = (icon?: string) => {
-    if (!icon) return false;
-    return icon.startsWith('http') || icon.endsWith('.png') || icon.endsWith('.jpg') || icon.endsWith('.jpeg');
-  };
 
   return (
     <TouchableOpacity
@@ -58,22 +53,11 @@ const CategoryCard = ({
           backgroundColor: theme.colors.surface,
         }}
       >
-        {icon && isImageUrl(icon) ? (
-          <Image
-            source={{
-              uri: icon.startsWith('http')
-                ? icon
-                : `https://be.donation.matrixvert.com/storage/${icon}`,
-            }}
-            style={{ width: 32, height: 32, resizeMode: 'contain' }}
-          />
-        ) : (
-          <Ionicons
-            name={icon && /^[a-z0-9-]+$/i.test(icon) ? (icon as any) : 'pricetags-outline'}
-            size={26}
-            color={iconColor}
-          />
-        )}
+        <Ionicons
+          name={icon_name && /^[a-z0-9-]+$/i.test(icon_name) ? (icon_name as any) : 'pricetags-outline'}
+          size={26}
+          color={iconColor}
+        />
       </View>
 
       <Typo

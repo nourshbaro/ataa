@@ -1,10 +1,10 @@
+import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
 import { verticalScale } from '@/utils/styling';
 import React, { useEffect, useRef } from 'react';
 import { Animated, Dimensions, Image, StyleSheet, View } from 'react-native';
 import ScreenWrapper from './ScreenWrapper';
 import Typo from './Typo';
-import { useLanguage } from '@/context/LanguageContext';
 
 const { width, height } = Dimensions.get("window");
 
@@ -35,7 +35,7 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({ onFinish }) => 
     <ScreenWrapper>
       <Animated.View style={[styles.container, { opacity }]}>
         <Image
-          source={require('@/assets/images/transparent.png')}
+          source={require('@/assets/images/ataalogo.png')}
           style={styles.image}
           resizeMode="contain"
         />

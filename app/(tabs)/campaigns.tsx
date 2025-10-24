@@ -6,6 +6,7 @@ import Loading from '@/components/Loading'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import Typo from '@/components/Typo'
 import { useLanguage } from '@/context/LanguageContext'
+import { useSave } from '@/context/SavedContext'
 import { useTheme } from '@/context/ThemeContext'
 import { useAuth } from '@/context/UserContext'
 import { radius, spacingX, spacingY } from '@/types/theme'
@@ -23,6 +24,7 @@ const campaign = () => {
     const { theme } = useTheme();
     const { isRTL, t } = useLanguage();
     const { isAuthenticated, logout } = useAuth()
+    const { savedCampaignIds, fetchSavedCampaigns, handleToggleSave } = useSave();
 
     const [isLoadingCampaign, setIsLoadingCampaign] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -44,6 +46,10 @@ const campaign = () => {
             setIsRefreshing(false);
         }
     };
+
+    useEffect(() => {
+        fetchSavedCampaigns();
+    }, []);
 
     const handleLoadMore = () => {
         if (hasMore && !paginationLoading && !isLoadingCampaign) {
@@ -106,9 +112,9 @@ const campaign = () => {
                 leftIcon={
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image
-                            source={require('../../assets/images/noprofile.jpg')}
+                            source={require('../../assets/images/ataalogo.png')}
                             style={styles.image}
-                            resizeMode="cover"
+                            resizeMode="contain"
                         />
 
                         {name ? (
@@ -135,11 +141,11 @@ const campaign = () => {
                 }
                 rightIcon={
                     <TouchableOpacity
-                        onPress={() => { }}
+                        onPress={() => { router.push('/(modals)/saved') }}
                         style={[styles.iconButton, { left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}
                     >
                         <Ionicons
-                            name={"heart-outline"}
+                            name={"bookmark-outline"}
                             size={30}
                             color={theme.colors.textSecondary}
                         />
@@ -167,7 +173,8 @@ const campaign = () => {
                             data={campaigns}
                             renderItem={({ item }) => (
                                 <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
-                                    <CampaignCard {...item} cardWidth={screenWidth * 0.9} isLoading={isLoadingCampaign} />
+                                    <CampaignCard {...item} cardWidth={screenWidth * 0.9} isLoading={isLoadingCampaign} isSaved={savedCampaignIds.includes(item.id)}
+                                        onToggleSave={() => isAuthenticated ? handleToggleSave(item.id) : router.push('/(auth)') } />
                                 </View>
                             )}
                             keyExtractor={(item) => item.id.toString()}

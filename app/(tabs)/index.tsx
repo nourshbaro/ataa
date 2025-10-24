@@ -7,28 +7,29 @@ import Header from '@/components/header';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { useLanguage } from '@/context/LanguageContext';
+import { useSave } from '@/context/SavedContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/UserContext';
-import { radius, spacingX, spacingY } from '@/types/theme';
+import styles from '@/styles/index.styles';
+import { spacingX, spacingY } from '@/types/theme';
 import { Campaigns, Categories } from '@/types/types';
 import { verticalScale } from '@/utils/styling';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Image, Pressable, RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Image, Pressable, RefreshControl, TouchableOpacity, View } from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
 
 const index = () => {
-  const { t, toggleLanguage, language, isRTL } = useLanguage();
-  const { theme, mode } = useTheme()
-  const { isAuthenticated, logout } = useAuth()
+  const { t, isRTL } = useLanguage();
+  const { theme } = useTheme()
+  const { isAuthenticated } = useAuth()
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isLoadingLatestCampaign, setIsLoadingLatestCampaign] = useState(true);
   const [isLoadingLatestCategory, setIsLoadingLatestCategory] = useState(true);
   const [isLoadingCatCampaign, setIsLoadingCatCampaign] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const [latestCampaign, setLatestCampaign] = useState<Campaigns[]>([]);
   const [latestCategories, setLatestCategories] = useState<Categories[]>([]);
   const [catCampaign, setCatCampaign] = useState<any[]>([]);
@@ -37,16 +38,18 @@ const index = () => {
   const [showEmpty, setShowEmpty] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [name, setName] = useState<string | null>(null);
+  const { savedCampaignIds, fetchSavedCampaigns, handleToggleSave } = useSave();
 
   useEffect(() => {
     fetchData();
+    fetchSavedCampaigns();
   }, []);
 
   const onRefresh = async () => {
     setIsRefreshing(true);
+    setIsLoadingCatCampaign(true)
     setIsLoadingLatestCampaign(true)
     setIsLoadingLatestCategory(true)
-    setIsLoadingCatCampaign(true)
 
     try {
       await fetchData();
@@ -142,9 +145,9 @@ const index = () => {
         leftIcon={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image
-              source={require('../../assets/images/noprofile.jpg')}
+              source={require('../../assets/images/ataalogo.png')}
               style={styles.image}
-              resizeMode="cover"
+              resizeMode="contain"
             />
 
             {name ? (
@@ -171,59 +174,16 @@ const index = () => {
         }
         rightIcon={
           <TouchableOpacity
-            onPress={() => { }}
+            onPress={() => { router.push('/(modals)/saved') }}
             style={[styles.iconButton, { left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}
           >
             <Ionicons
-              name={"heart-outline"}
+              name={"bookmark-outline"}
               size={30}
               color={theme.colors.textSecondary}
             />
           </TouchableOpacity>
         } />
-      {/* // rightIcon={ */}
-      {/* //   <Button
-      //     onPress={async () => {
-      //       if (isAuthenticated) {
-      //         setIsLoading(true);
-      //         try {
-      //           await logout();
-      //         } finally {
-      //           setIsLoading(false);
-      //         }
-      //       } else {
-      //         router.push('/(auth)');
-      //       }
-      //     }}
-      //     style={[
-      //       styles.loginButton,
-      //       {
-      //         borderColor: isAuthenticated ? theme.colors.error : theme.colors.textPrimary,
-      //         backgroundColor: theme.colors.transparent
-      //       }
-      //     ]}
-      //     loading={isLoading}
-      //     disabled={isLoading}
-      //   >
-      //     {
-      //       isAuthenticated ? (
-      //         <>
-      //           <Entypo name="log-out" size={24} color={theme.colors.error} />
-      //           <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }} color={theme.colors.error}>
-      //             Logout
-      //           </Typo>
-      //         </>
-      //       ) : (
-      //         <>
-      //           <Entypo name="login" size={24} color={theme.colors.textPrimary} />
-      //           <Typo size={16} fontWeight="medium" style={{ marginHorizontal: verticalScale(8) }}>
-      //             Login
-      //           </Typo>
-      //         </>
-      //       )
-      //     }
-      //   </Button>
-      // }  */}
 
       < FlatList
         data={catCampaign}
@@ -246,7 +206,8 @@ const index = () => {
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <View style={{ marginVertical: spacingY._5, alignItems: 'center' }}>
-            <CampaignCard {...item} cardWidth={screenWidth * 0.9} />
+            <CampaignCard {...item} cardWidth={screenWidth * 0.9} isLoading={isLoadingCatCampaign} isSaved={savedCampaignIds.includes(item.id)}
+              onToggleSave={() => isAuthenticated ? handleToggleSave(item.id) : router.push('/(auth)') } />
           </View>
         )}
         ListHeaderComponent={
@@ -254,13 +215,6 @@ const index = () => {
             null
           ) : (
             <>
-              <View style={styles.titleHeader} >
-                <Typo style={styles.mainTitle} color={theme.colors.textPrimary}>{t('latestcampaign')}</Typo>
-                <Pressable onPress={() => { router.push('/(tabs)/campaigns') }}>
-                  <Typo style={styles.seeAll} color={theme.colors.textSecondary}>{t('more')}</Typo>
-                </Pressable>
-              </View >
-
               <LatestCampaign
                 data={latestCampaign}
                 // isRefreshing={isRefreshing}
@@ -343,60 +297,3 @@ const index = () => {
 }
 
 export default index
-
-const styles = StyleSheet.create({
-  scrollViewStyle: {
-    // marginTop: spacingY._10,
-    paddingBottom: verticalScale(100),
-    // gap: spacingY._25
-  },
-  titleHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // marginBottom: verticalScale(10),
-    alignItems: 'center',
-    marginHorizontal: verticalScale(20),
-    marginBottom: verticalScale(10),
-    marginTop: verticalScale(20),
-  },
-  mainTitle: {
-    fontSize: verticalScale(20),
-    fontWeight: '700'
-  },
-  seeAll: {
-    fontSize: verticalScale(14),
-    fontWeight: '500',
-    marginTop: verticalScale(5)
-  },
-  errorText: {
-    color: 'red',
-    marginTop: 0,
-    alignSelf: 'center',
-    paddingHorizontal: verticalScale(50)
-  },
-  loginButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    borderWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  notfound: {
-    marginTop: 0,
-    alignSelf: 'center',
-    paddingHorizontal: verticalScale(50)
-  },
-  image: {
-    width: verticalScale(50),
-    // backgroundColor: 'red',
-    height: verticalScale(50),
-    borderRadius: radius._30
-  },
-  iconButton: {
-    // position: "absolute",
-    // top: 10,
-    borderRadius: 50,
-    padding: 6,
-  },
-})

@@ -10,7 +10,7 @@ import { useAuth } from '@/context/UserContext'
 import { radius, spacingX } from '@/types/theme'
 import { Categories } from '@/types/types'
 import { verticalScale } from '@/utils/styling'
-import { Entypo, Ionicons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
@@ -27,7 +27,7 @@ const itemWidth =
 
 const category = () => {
     const { theme } = useTheme();
-    const { isRTL,t } = useLanguage();
+    const { isRTL, t } = useLanguage();
     const { isAuthenticated, logout } = useAuth()
     const [isLoadingCategory, setIsLoadingCategory] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -93,9 +93,9 @@ const category = () => {
                 leftIcon={
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image
-                            source={require('../../assets/images/noprofile.jpg')}
+                            source={require('../../assets/images/ataalogo.png')}
                             style={styles.image}
-                            resizeMode="cover"
+                            resizeMode="contain"
                         />
 
                         {name ? (
@@ -122,11 +122,11 @@ const category = () => {
                 }
                 rightIcon={
                     <TouchableOpacity
-                        onPress={() => { }}
+                        onPress={() => { router.push('/(modals)/saved') }}
                         style={[styles.iconButton, { left: isRTL ? 10 : undefined, right: isRTL ? undefined : 10 }]}
                     >
                         <Ionicons
-                            name={"heart-outline"}
+                            name={"bookmark-outline"}
                             size={30}
                             color={theme.colors.textSecondary}
                         />
@@ -172,7 +172,7 @@ const category = () => {
                                     <CategoryCard
                                         id={item.id}
                                         name={item.name}
-                                        icon={item.icon}
+                                        icon_name={item.icon_name}
                                         selectedId={0}
                                         onSelect={() => {
                                             router.push({

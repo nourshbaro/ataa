@@ -52,8 +52,8 @@ const CustomTabs: React.FC<BottomTabBarProps> = ({ state, descriptors, navigatio
 
     const tabbarIcons: any = {
         index: (isFocused: boolean) => renderTabIcon('home-outline', t('home'), isFocused),
-        categories: (isFocused: boolean) => renderTabIcon('hand-left-outline', t('categories'), isFocused),
-        campaigns: (isFocused: boolean) => renderTabIcon('gift-outline', t('campaigns'), isFocused),
+        categories: (isFocused: boolean) => renderTabIcon('grid-outline', t('categories'), isFocused),
+        campaigns: (isFocused: boolean) => renderTabIcon('albums-outline', t('campaigns'), isFocused),
         settings: (isFocused: boolean) => renderTabIcon('settings-outline', t('settings'), isFocused),
         // contribute: (isFocused: boolean) => renderTabIcon('heart-outline', 'Contribute', isFocused),
     };
